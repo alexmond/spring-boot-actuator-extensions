@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.alexmond.boot-sample</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>boot-sample-root</artifactId>
+    <packaging>pom</packaging>
+    <name>Spring boot samples root</name>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <properties>
+        <spring-boot-admin.version>3.2.3</spring-boot-admin.version>
+    </properties>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Alex Mondshain</name>
+            <email>alexmond@users.noreply.github.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git@github.com:alexmond/spring-boot-actuator-extensions.git</connection>
+        <developerConnection>scm:git:git@github.com:alexmond/spring-boot-actuator-extensions.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/alexmond/spring-boot-actuator-extensions</url>
+    </scm>
+    <modules>
+        <module>spring-boot-health-checks</module>
+        <module>spring-boot-actuator-sanitizer</module>
+    </modules>
+</project>

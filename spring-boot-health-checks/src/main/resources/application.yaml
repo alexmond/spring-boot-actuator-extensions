@@ -1,0 +1,40 @@
+sample:
+  string-sample: "config from dependecy"
+
+
+management:
+  health:
+    http:
+      sites:
+        google:
+          url: https://www.google.com
+          timeout: 2   # seconds
+          period: 5000 # 5 seconds
+        github:
+          url: https://api.github.com
+          timeout: 2
+          period: 7000 # 7 seconds
+        example:
+          url: https://example.com
+          timeout: 1
+          period: 12000 # 12 seconds
+    port:
+      sites:
+        admin:
+          host: localhost
+          port: 8090
+          period: 10000   # check every 10s
+        sample:
+          host: localhost
+          port: 8085
+          period: 5000
+
+    actuator:
+      sites:
+        self:
+          url: http://localhost:8090/actuator/health
+          period: 10000  # ms
+        admin-client:
+          url: http://localhost:8085/actuator/health
+          period: 7000
+
