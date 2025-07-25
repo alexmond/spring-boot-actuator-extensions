@@ -3,7 +3,8 @@ name: Release & Publish to GitHub Packages
 on:
   push:
     tags:
-      - 'v*.*.*'    # Triggers on version tags like v1.2.3
+      - '*.*.*'
+      - '*.*.*-SNAPSHOT'
 
 jobs:
   release:
