@@ -35,7 +35,8 @@
         <url>https://github.com/alexmond/spring-boot-actuator-extensions</url>
     </scm>
     <modules>
-        <module>spring-boot-health-checks</module>
-        <module>spring-boot-actuator-sanitizer</module>
+        <module>spring-boot-health-checks-starter</module>
+        <module>spring-boot-actuator-sanitizer-starter</module>
+        <module>spring-boot-test-app</module>
     </modules>
 </project>

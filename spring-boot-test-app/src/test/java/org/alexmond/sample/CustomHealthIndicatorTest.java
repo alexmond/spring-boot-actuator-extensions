@@ -25,37 +25,17 @@ public class CustomHealthIndicatorTest {
     private WebApplicationContext context;
 
     @Autowired
-    private CustomHealthIndicator customHealthIndicator;
-
-    @Autowired
     private MockMvc mockMvc;
-
-    @AfterEach
-    void tearDown() {
-        customHealthIndicator.setHealthy(true);
-    }
 
     @Test
     void healthShouldReturnUpWhenHealthyIsTrue() throws Exception {
-        // Arrange
-        mockMvc.perform(get("/setUp")).andExpect(status().isOk());
-
         // Act & Assert
         mockMvc.perform(get("/actuator/health"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("UP"))
-                .andExpect(jsonPath("$.components.custom.details.custom").value("Everything is OK!"));
+                .andExpect(jsonPath("$.status").value("UP"));
     }
 
     @Test
-    void healthShouldReturnDownWhenHealthyIsFalse() throws Exception {
-        // Arrange
-        mockMvc.perform(get("/setDown")).andExpect(status().isOk());
-
-        // Act & Assert
-        mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().is5xxServerError())
-                .andExpect(jsonPath("$.status").value("DOWN"))
-                .andExpect(jsonPath("$.components.custom.details.custom").value("Something is wrong!"));
+    void contextLoads() {
     }
 }

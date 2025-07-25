@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.alexmond</groupId>
-    <artifactId>spring-boot-health-checks</artifactId>
+    <artifactId>spring-boot-health-checks-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-health-checks</name>
     <description>spring-boot-health-checks</description>

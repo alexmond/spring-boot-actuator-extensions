@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.alexmond</groupId>
-    <artifactId>spring-boot-actuator-sanitizer</artifactId>
+    <artifactId>spring-boot-actuator-sanitizer-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-actuator-sanitizer</name>
     <description>spring-boot-actuator-sanitizer</description>
