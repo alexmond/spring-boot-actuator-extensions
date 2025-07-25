@@ -21,6 +21,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Copy Maven settings.xml
+      run: |
+        env
+        mkdir -p ~/.m2
+        cp .github/settings.xml ~/.m2/settings.xml
+
+
     - name: Publish to GitHub Packages
       run: mvn --batch-mode -P release deploy
       env:
