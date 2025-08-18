@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorConfigSanitizingStarter {
 
     @Bean
-    @ConfigurationProperties(prefix = "management.endpoint.sanitizing")
     public SanitizingProperties defaultSanitizingProperties(){return new SanitizingProperties();};
 
     @Bean

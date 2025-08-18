@@ -1,11 +1,13 @@
 package org.alexmond.actuator.sanitizer;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 import java.util.Set;
 
 @Data
+@ConfigurationProperties(prefix = "management.endpoint.sanitizing")
 public class SanitizingProperties {
 
     /**
