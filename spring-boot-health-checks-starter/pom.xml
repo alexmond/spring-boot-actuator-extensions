@@ -5,10 +5,10 @@
     <parent>
         <groupId>org.alexmond</groupId>
         <artifactId>spring-boot-actuator-extensions-root</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
     <artifactId>spring-boot-health-checks-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>spring-boot-health-checks</name>
     <description>spring-boot-health-checks</description>
     <properties>
