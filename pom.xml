@@ -148,15 +148,6 @@
                 <module>spring-boot-health-checks-starter</module>
                 <module>spring-boot-actuator-sanitizer-starter</module>
                 <module>spring-boot-test-app</module>
-                <module>docs</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>docs</id>
-            <modules>
-                <module>spring-boot-health-checks-starter</module>
-                <module>spring-boot-actuator-sanitizer-starter</module>
-                <module>docs</module>
             </modules>
         </profile>
         <profile>
