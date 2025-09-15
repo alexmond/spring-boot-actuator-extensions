@@ -1,33 +1,175 @@
-= Welcome to Component B!
-:navtitle: Welcome
+= Spring Boot Config JSON Schema Generator
+Alex Mondshain <alex.mondshaing@gmail.com>
+2014-09-09
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::pages[:pages: pages]
+ifndef::partials[:partials: partials]
 
-This is the automatic start page for version *{page-component-display-version}* of Component B.
+A Spring Boot starter library that automatically generates JSON Schema documentation for your application's configuration properties.
+It simplifies the process of documenting and validating configuration by generating JSON Schema from your Spring Boot configuration classes.
 
-Component B is one of two documentation components in the Antora Demo.
-The other docs component, Component A, can be accessed using the component selector menu (aka component drawer) at the bottom of the menu on the left side of the page.
+[#introduction]
+== Introduction
 
-== Page source
+A Spring Boot starter library uses Spring Context to process @ConfigurationProperties annotated classes and relevant properties from Spring Boot's configuration metadata (spring-configuration-metadata.json) to generate JSON Schema.
+The generated schema can be used by compatible editors for configuration validation and assistance outside of the Java project, as well as for configuration validation during CI/CD pipelines.
 
-This page is sourced from the AsciiDoc file named [.path]_index.adoc_ that is located at [.path]_demo-component-b/docs/modules/ROOT/pages_.
+== Key Features
 
-=== Why is this the home page of Component B?
+- Automatic JSON Schema generation from @ConfigurationProperties classes
+- Support for validation annotations and property constraints (JSR-380/Bean Validation)
+- Full compatibility with Spring Boot 3.x
+- Java 17+ runtime support
+- Built-in REST API endpoint for schema access
+- Unit test integration for schema generation
+- IDE integration support for configuration assistance
+- Support for nested properties and complex types
+- Custom validation rule support
 
-This page is automatically used as the start page of Component B because it is stored in the ROOT module and named [.path]_index.adoc_.
+== Prerequisites
 
-=== Why is this the home page of the Antora Demo site?
+- Java 17 or higher
+- Spring Boot 3.x
+- Maven or Gradle build system
+- Configuration processor for property metadata generation:
 
-This page is used as the home page for the Antora Demo because it is assigned as the site `start_page` in the Demo site's playbook file [.path]_site.yml_.
+[source,xml,subs=+attributes]
+----
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-configuration-processor</artifactId>
+    <optional>true</optional>
+</dependency>
+----
 
-== Cross reference syntax to target this page
+[#usage]
+== Usage
 
-To create a cross reference *to this page from another page in the ROOT module of Component B*, the xref syntax would be `\xref:index.adoc[]`.
+=== Maven (use in unit tests)
 
-To create a cross reference *to this page from a page in Module One of Component B*, the xref syntax would be `\xref:ROOT:index.adoc[]`.
+Add the following dependency to your `pom.xml`:
 
-=== Always target the latest version of this page
+[source,xml,subs=+attributes]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-config-json-schema-starter</artifactId>
+    <version>{project-version}</version>
+    <scope>test</scope>
+</dependency>
+----
 
-To create a cross reference *to the latest version of this page from a page in Component A*, the xref syntax would be `\xref:component-b::index.adoc[]`.
+.SampleJsonSchemaGeneratorTests.java
+[source,java]
+----
+@SpringBootTest
+@Slf4j
+class SampleJsonSchemaGeneratorTests {
 
-=== Target a specific version of this page
+    @Autowired
+    private JsonSchemaService jsonSchemaService;
 
-To create a cross reference *to version 1.0 of this page from a page in Component A*, the xref syntax would be `\xref:1.0@component-b::index.adoc[]`.
+    @Test
+    void generateJsonSchema() throws Exception {
+
+        String jsonConfigSchema;
+        jsonConfigSchema = jsonSchemaService.generateFullSchema();
+
+        ObjectMapper jsonMapper = new ObjectMapper();
+        ObjectWriter jsonWriter = jsonMapper.writer(new DefaultPrettyPrinter());
+        log.info("Writing json schema");
+        jsonWriter.writeValue(Paths.get("sample-schema.json").toFile(),
+            jsonMapper.readTree(jsonConfigSchema));
+
+        ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+        ObjectWriter yamlWriter = yamlMapper.writer(new DefaultPrettyPrinter());
+        log.info("Writing yaml schema");
+        yamlWriter.writeValue(Paths.get("sample-schema.yaml").toFile(),
+            jsonMapper.readTree(jsonConfigSchema));
+    }
+
+}
+----
+
+=== Using as REST API Endpoint
+
+To expose the JSON schema via a REST endpoint (similar to Swagger API docs), first add the following dependency to your `pom.xml`:
+
+[source,xml,subs=+attributes]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-config-json-schema-starter</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+.GenerateJsonSchema.java
+[source,java]
+----
+@RestController
+@Slf4j
+public class GenerateJsonSchema {
+
+    @Autowired
+    private JsonSchemaService jsonSchemaService;
+
+    @GetMapping("/config-schema")
+    public String getConfigSchema() throws Exception {
+        return jsonSchemaService.generateFullSchema();
+    }
+
+}
+----
+
+[#editors]
+== Using in editors
+
+=== Usage in IntelliJ IDEA and other JetBrains IDEs
+
+Add schema reference to your YAML configuration file:
+
+[source,yaml]
+----
+$schema: "https://alexmond.github.io/spring-boot-config-json-schema/sample/boot-generic-config.json"
+
+spring:
+  datasource:
+    url:
+----
+
+Examples:
+
+[.thumb]
+image::Intellij1.png[scaledwidth=75%]
+[.thumb]
+image::Intellij2.png[scaledwidth=75%]
+
+=== Usage in Visual Studio Code
+
+Add schema reference using YAML language server directive (requires YAML Language Support by Red Hat extension):
+
+[source,yaml]
+----
+# yaml-language-server: $schema=https://alexmond.github.io/spring-boot-config-json-schema/sample/boot-generic-config.json
+
+spring:
+  datasource:
+    name:
+----
+
+Examples:
+
+[.thumb]
+image::vcs1.png[scaledwidth=75%]
+[.thumb]
+image::vcs2.png[scaledwidth=75%]
+
+[configuration-properties]
+== Configuration Properties
+
+Below you can find a list of configuration properties.
+
+include::{partials}/_configprops.adoc[]
