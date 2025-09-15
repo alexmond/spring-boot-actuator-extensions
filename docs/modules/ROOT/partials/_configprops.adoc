@@ -1,0 +1,20 @@
+
+|===
+|Name |Default Value |Description
+
+|management.endpoint.sanitizer.enabled
+|false
+|Controls whether the sanitization endpoint is enabled.
+
+|management.endpoint.sanitizer.excluded-paths
+|[]
+|List of JSON paths that should be excluded from the response.
+
+|management.endpoint.sanitizer.mask-pattern
+|"****"
+|Pattern used to mask sensitive values in the response.
+
+|management.endpoint.sanitizer.sensitive-keys
+|["password","secret","key","token","credential"]
+|List of keys that should be considered sensitive and masked.
+|===
