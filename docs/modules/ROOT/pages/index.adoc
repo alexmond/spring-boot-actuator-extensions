@@ -1,8 +1,66 @@
-== Spring Boot Config JSON Schema Generator
-Alex Mondshain <alex.mondshaing@gmail.com>
-2014-09-09
-:revnumber: 123
+= Spring Boot Actuator Sanitizing Starter
+Alex Mondshain <alex.mondshain@gmail.com>
+2025-09-15
+:revnumber: 0.0.3
 :example-caption!:
+:source-highlighter: highlight.js
+
+== Introduction
+
+The Spring Boot Actuator Sanitizing starter provides functionality to sanitize sensitive information from actuator endpoints such as /actuator/env and /actuator/configprops.
+It implements the `SanitizingFunction` interface (see the https://docs.spring.io/spring-boot/api/java/org/springframework/boot/actuate/endpoint/SanitizingFunction.html[SanitizingFunction] to customize how data is cleaned before being exposed through actuator endpoints.
+
+== Features
+
+This starter supports Spring Boot 3.5+ and requires Java 17 or later.
+
+The sanitizer provides flexible configuration options for masking sensitive data:
+
+* Exact key matching - specify exact property names to sanitize
+* Key pattern matching - use regular expressions to match property keys
+* Value pattern matching - sanitize based on value content patterns
+
+
+== Configuration
+
+To use the sanitizer, add the following dependency to your `pom.xml`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-actuator-sanitizer-starter</artifactId>
+    <version>{page-component-version}</version>
+</dependency>
+----
+
+== Sample sanitizer configuration
+
+[source,yaml]
+----
+management:
+  endpoint:
+    sanitizing:
+      enabled: true
+      sanitize-values: true
+      mask-value: "***HIDDEN***"
+      keys:
+        - password
+        - secret
+        - token
+        - key
+        - credential
+        - private
+        - apikey
+        - auth
+      key-patterns:
+        - ".*password.*"
+        - ".*secret.*"
+        - ".*token.*"
+        - ".*key.*"
+        - ".*credential.*"
+        - ".*auth.*"
+----
 
 == Configuration Properties
 

@@ -1,20 +1,28 @@
-
+.Configuration Properties
 |===
 |Name |Default Value |Description
 
-|management.endpoint.sanitizer.enabled
-|false
-|Controls whether the sanitization endpoint is enabled.
+|management.endpoint.sanitizing.enabled
+|`true`
+|Whether to enable custom sanitization (if false, uses Spring Boot defaults).
 
-|management.endpoint.sanitizer.excluded-paths
-|[]
-|List of JSON paths that should be excluded from the response.
+|management.endpoint.sanitizing.key-patterns
+|`[".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*"]`
+|List of regex patterns to match property keys for sanitization.
 
-|management.endpoint.sanitizer.mask-pattern
-|"****"
-|Pattern used to mask sensitive values in the response.
+|management.endpoint.sanitizing.keys
+|`["password", "secret", "token", "key", "credential", "private"]`
+|List of exact property keys to sanitize (case-insensitive).
 
-|management.endpoint.sanitizer.sensitive-keys
-|["password","secret","key","token","credential"]
-|List of keys that should be considered sensitive and masked.
+|management.endpoint.sanitizing.mask-value
+|`\******`
+|The masked value to show instead of the actual value.
+
+|management.endpoint.sanitizing.sanitize-values
+|`true`
+|Whether to sanitize values.
+
+|management.endpoint.sanitizing.value-patterns
+|`["^[A-Za-z0-9+/=]{20,}$", "^[A-Fa-f0-9]{32,}$", "^Bearer .*", "^Basic .*"]`
+|List of regex patterns to match values for sanitization. Includes patterns for Base64-encoded strings (20+ chars), hex-encoded hashes/keys (32+ chars), and common Authorization headers (Bearer, Basic).
 |===

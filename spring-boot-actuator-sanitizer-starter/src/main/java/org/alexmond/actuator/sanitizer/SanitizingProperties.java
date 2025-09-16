@@ -11,16 +11,23 @@ import java.util.Set;
 public class SanitizingProperties {
 
     /**
-     * List of exact property keys to sanitize (case-insensitive)
+     * List of exact property keys to sanitize (case-insensitive).
+     * Default: ["password", "secret", "token", "key", "credential", "private"]
      */
     private Set<String> keys = Set.of("password", "secret", "token", "key", "credential", "private");
 
     /**
-     * List of regex patterns to match property keys for sanitization
+     * List of regex patterns to match property keys for sanitization.
+     * Default: [".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*"]
      */
     private List<String> keyPatterns = List.of(".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*");
     /**
-     * List of regex patterns to match values for sanitization
+     * List of regex patterns to match values for sanitization.
+     * Default patterns:
+     * - "^[A-Za-z0-9+/=]{20,}$" - Matches Base64 encoded strings (20+ chars)
+     * - "^[A-Fa-f0-9]{32,}$" - Matches hex-encoded hashes/keys (32+ chars)
+     * - "^Bearer .*" - Matches Bearer authentication tokens
+     * - "^Basic .*" - Matches Basic authentication headers
      */
     private List<String> valuePatterns  = List.of(
             "^[A-Za-z0-9+/=]{20,}$", // Base64-like
@@ -30,17 +37,20 @@ public class SanitizingProperties {
     );
 
     /**
-     * The masked value to show instead of the actual value
+     * The masked value to show instead of the actual value.
+     * Default: "******"
      */
     private String maskValue = "******";
 
     /**
-     * Whether to enable custom sanitization (if false, uses Spring Boot defaults)
+     * Whether to enable custom sanitization (if false, uses Spring Boot defaults).
+     * Default: true
      */
     private boolean enabled = true;
 
     /**
-     * Whether to sanitize values
+     * Whether to sanitize values.
+     * Default: true
      */
     private boolean sanitizeValues = true;
 }

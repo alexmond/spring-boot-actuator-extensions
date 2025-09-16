@@ -9,10 +9,14 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
   endpoint:
     health:
       show-details: always
+    env:
+      show-values: always
+    configprops:
+      show-values: always
 
 ---
 spring:

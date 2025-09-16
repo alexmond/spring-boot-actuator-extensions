@@ -1,4 +1,4 @@
-test:
+testprop:
   password: just some password
   token: just some token
   multiple:
@@ -9,12 +9,6 @@ test:
 
 management:
   endpoint:
-    health:
-      show-details: always
-    env:
-      show-values: always
-    configprops:
-      show-values: always
     sanitizing:
       enabled: true
       sanitize-values: true
