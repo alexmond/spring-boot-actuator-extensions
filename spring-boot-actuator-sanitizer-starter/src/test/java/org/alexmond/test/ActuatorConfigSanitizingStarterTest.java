@@ -75,10 +75,7 @@ class ActuatorConfigSanitizingStarterTest {
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(content.toString());
-        JsonNode testConfig = root.findValue("testConfig");
 
         assertEquals(value, root.findValue("testConfig").at(node).asText());
     }
-
-
 }
