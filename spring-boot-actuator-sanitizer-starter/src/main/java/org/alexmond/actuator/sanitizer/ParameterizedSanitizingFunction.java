@@ -135,5 +135,4 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
         }
         return compiledValuePatterns;
     }
-
 }
