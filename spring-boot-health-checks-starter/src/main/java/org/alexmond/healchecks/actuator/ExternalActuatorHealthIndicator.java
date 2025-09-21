@@ -2,6 +2,7 @@ package org.alexmond.healchecks.actuator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -15,35 +16,30 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ExternalActuatorHealthIndicator implements HealthIndicator {
 
     private final HealthActuatorProperties properties;
-    private final Map<String, AtomicReference<Health>> siteHealths = new ConcurrentHashMap<>();
-    private final Map<String, ScheduledFuture<?>> siteTasks = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
+    private static final Map<String, Health> cachedHealth = new ConcurrentHashMap<>();
+    private static final Map<String, Long> lastCheck = new ConcurrentHashMap<>();
+
 
     public ExternalActuatorHealthIndicator(HealthActuatorProperties properties) {
         this.properties = properties;
     }
 
-    @PostConstruct
-    public void startSiteCheckers() {
-        for (Map.Entry<String, ActuatorSite> entry : properties.getSites().entrySet()) {
-            String siteName = entry.getKey();
-            ActuatorSite site = entry.getValue();
-            siteHealths.put(siteName, new AtomicReference<>(Health.unknown().withDetail("url", site.getUrl()).build()));
-            ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(
-                () -> checkSite(siteName, site),
-                0,
-                site.getPeriod(),
-                TimeUnit.MILLISECONDS
-            );
-            siteTasks.put(siteName, future);
+    private Health checkSite(ActuatorSite site) {
+        if (site == null) {
+            return Health.unknown().withDetail("error", "Site configuration is null").build();
         }
-    }
 
-    private void checkSite(String siteName, ActuatorSite site) {
-        RestClient client = RestClient.create();
+        var factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(site.getTimeout());
+        factory.setReadTimeout(site.getTimeout());
+
+        RestClient restClient = RestClient.builder()
+                .baseUrl(site.getUrl())
+                .requestFactory(factory)
+                .build();
         Health health;
         try {
-            var response = client.get().uri(site.getUrl()).retrieve().body(Map.class);
+            var response = restClient.get().uri(site.getUrl()).retrieve().body(Map.class);
             String status = response != null && response.containsKey("status") ? response.get("status").toString() : "UNKNOWN";
             health = "UP".equalsIgnoreCase(status)
                 ? Health.up().withDetail("url", site.getUrl()).build()
@@ -51,27 +47,45 @@ public class ExternalActuatorHealthIndicator implements HealthIndicator {
         } catch (RestClientException ex) {
             health = Health.down().withDetail("url", site.getUrl()).withException(ex).build();
         }
-        siteHealths.get(siteName).set(health);
+        return health;
     }
 
-    @PreDestroy
-    public void shutdown() {
-        siteTasks.values().forEach(fut -> fut.cancel(true));
-        scheduler.shutdown();
-    }
 
     @Override
     public Health health() {
-        Health.Builder builder = Health.up().withDetail("checkedSites", siteHealths.size());
-        boolean anyDown = false;
-        for (Map.Entry<String, AtomicReference<Health>> entry : siteHealths.entrySet()) {
-            Health h = entry.getValue().get();
-            builder.withDetail(entry.getKey(), h);
-            if (!"UP".equalsIgnoreCase(h.getStatus().getCode())) {
-                anyDown = true;
-            }
+        if (properties == null || properties.getSites() == null) {
+            return Health.unknown().withDetail("error", "No sites configured").build();
         }
-        if (anyDown) builder.down();
-        return builder.build();
+
+        Health.Builder builder = Health.up()
+                .withDetail("checkedSites", properties.getSites().size())
+                .withDetail("timestamp", System.currentTimeMillis());
+
+        AtomicReference<Boolean> anyDown = new AtomicReference<>(false);
+
+        properties.getSites().forEach((name, site) -> {
+            if (site != null) {
+                Health health;
+                Long now = System.currentTimeMillis();
+                Long lastCheckTime = lastCheck.get(name);
+
+                if (lastCheckTime != null && cachedHealth.get(name) != null
+                        && now - lastCheckTime < site.getInterval().toMillis()) {
+                    health = cachedHealth.get(name);
+                } else {
+                    health = checkSite(site);
+                    lastCheck.put(name, now);
+                    cachedHealth.put(name, health);
+                }
+
+                builder.withDetail(name, health);
+
+                if (!"UP".equals(health.getStatus().getCode())) {
+                    anyDown.set(true);
+                }
+            }
+        });
+
+        return anyDown.get() ? builder.down().build() : builder.build();
     }
 }

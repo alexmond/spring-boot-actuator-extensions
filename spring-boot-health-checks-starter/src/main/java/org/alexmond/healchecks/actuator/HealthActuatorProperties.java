@@ -11,6 +11,7 @@ import java.util.Map;
  * Used to configure periodic health checks for multiple remote sites.
  */
 @Data
+@ConfigurationProperties("management.health.actuator")
 public class HealthActuatorProperties {
     /**
      * Map of site configurations where key is site identifier

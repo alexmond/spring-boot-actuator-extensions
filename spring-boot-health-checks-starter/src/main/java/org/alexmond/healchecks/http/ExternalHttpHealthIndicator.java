@@ -2,53 +2,52 @@ package org.alexmond.healchecks.http;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 
+/**
+ * Health indicator that monitors the status of external HTTP endpoints.
+ * Implements Spring Boot's HealthIndicator interface to provide health information
+ * about configured HTTP endpoints. Supports response status validation and caching
+ * of health check results based on configured intervals.
+ */
 public class ExternalHttpHealthIndicator implements HealthIndicator {
 
     private final HealthHttpProperties properties;
-    private final Map<String, AtomicReference<Health>> siteHealths = new ConcurrentHashMap<>();
-    private final Map<String, ScheduledFuture<?>> siteTasks = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
+    private static final Map<String, Health> cachedHealth = new ConcurrentHashMap<>();
+    private static final Map<String, Long> lastCheck = new ConcurrentHashMap<>();
 
+    /**
+     * Constructs a new ExternalHttpHealthIndicator with the specified properties.
+     *
+     * @param properties Configuration properties containing HTTP endpoints to monitor
+     */
     public ExternalHttpHealthIndicator(HealthHttpProperties properties) {
         this.properties = properties;
     }
 
-    @PostConstruct
-    public void startSiteCheckers() {
-        for (Map.Entry<String, HttpSite> entry : properties.getSites().entrySet()) {
-            String siteName = entry.getKey();
-            HttpSite site = entry.getValue();
-            siteHealths.put(siteName, new AtomicReference<>(Health.unknown().withDetail("url", site.getUrl()).build()));
-            ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(
-                    () -> checkSite(siteName, site),
-                    0,
-                    site.getPeriod(),
-                    TimeUnit.MILLISECONDS
-            );
-            siteTasks.put(siteName, future);
+    /**
+     * Performs a health check for a single HTTP endpoint.
+     * Validates the HTTP response status code against the expected status.
+     *
+     * @param site The HTTP site configuration containing URL, timeout, and expected status
+     * @return Health status of the site, including details about the check
+     */
+    private Health checkSite(HttpSite site) {
+        if (site == null) {
+            return Health.unknown().withDetail("error", "Site configuration is null").build();
         }
-    }
-
-    private void checkSite(String siteName, HttpSite site) {
-
         var factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(Duration.ofSeconds(site.getTimeout()));
-        factory.setReadTimeout(Duration.ofSeconds(site.getTimeout()));
+        factory.setConnectTimeout(site.getTimeout());
+        factory.setReadTimeout(site.getTimeout());
 
         RestClient restClient = RestClient.builder()
                 .baseUrl(site.getUrl())
@@ -56,37 +55,65 @@ public class ExternalHttpHealthIndicator implements HealthIndicator {
                 .build();
         Health health;
         try {
-            restClient.get().uri("/").retrieve().toBodilessEntity();
-            health = Health.up()
-                    .withDetail("url", site.getUrl())
-                    .build();
+            HttpStatusCode statusCode = restClient.get().uri(site.getUrl()).retrieve().toBodilessEntity().getStatusCode();
+            if (statusCode == site.getStatus()) {
+                health = Health.up()
+                        .withDetail("statusCode", statusCode)
+                        .build();
+            } else  {
+                health = Health.down().withDetail("status code", statusCode).withDetail("expected status code",site.getStatus()).build();
+            }
         } catch (RestClientException ex) {
             health = Health.down()
-                    .withDetail("url", site.getUrl())
+                    .withDetail("error", ex.getMessage())
                     .withException(ex)
                     .build();
         }
-        siteHealths.get(siteName).set(health);
+        return health;
     }
 
-    @PreDestroy
-    public void shutdown() {
-        siteTasks.values().forEach(fut -> fut.cancel(true));
-        scheduler.shutdown();
-    }
-
+    /**
+     * Implements the health check logic for all configured HTTP endpoints.
+     * Performs health checks for each configured site, respecting cache intervals
+     * and aggregating the results. The overall health is DOWN if any site is down.
+     *
+     * @return Aggregated health status of all configured sites
+     */
     @Override
     public Health health() {
-        Health.Builder builder = Health.up().withDetail("checkedSites", siteHealths.size());
-        boolean anyDown = false;
-        for (Map.Entry<String, AtomicReference<Health>> entry : siteHealths.entrySet()) {
-            Health h = entry.getValue().get();
-            builder.withDetail(entry.getKey(), h);
-            if (!"UP".equals(h.getStatus().getCode())) {
-                anyDown = true;
-            }
+        if (properties == null || properties.getSites() == null) {
+            return Health.unknown().withDetail("error", "No sites configured").build();
         }
-        if (anyDown) builder.down();
-        return builder.build();
+
+        Health.Builder builder = Health.up()
+                .withDetail("checkedSites", properties.getSites().size())
+                .withDetail("timestamp", System.currentTimeMillis());
+
+        AtomicReference<Boolean> anyDown = new AtomicReference<>(false);
+
+        properties.getSites().forEach((name, site) -> {
+            if (site != null) {
+                Health health;
+                Long now = System.currentTimeMillis();
+                Long lastCheckTime = lastCheck.get(name);
+
+                if (lastCheckTime != null && cachedHealth.get(name) != null
+                        && now - lastCheckTime < site.getInterval().toMillis()) {
+                    health = cachedHealth.get(name);
+                } else {
+                    health = checkSite(site);
+                    lastCheck.put(name, now);
+                    cachedHealth.put(name, health);
+                }
+
+                builder.withDetail(name, health);
+
+                if (!"UP".equals(health.getStatus().getCode())) {
+                    anyDown.set(true);
+                }
+            }
+        });
+
+        return anyDown.get() ? builder.down().build() : builder.build();
     }
 }

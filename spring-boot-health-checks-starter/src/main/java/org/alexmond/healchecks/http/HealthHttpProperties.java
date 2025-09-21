@@ -12,6 +12,7 @@ import java.util.Map;
  * Maps to the 'management.health.http' configuration prefix.
  */
 @Data
+@ConfigurationProperties("management.health.http")
 public class HealthHttpProperties {
 
     /**

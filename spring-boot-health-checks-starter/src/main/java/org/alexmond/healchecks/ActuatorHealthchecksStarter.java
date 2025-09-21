@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorHealthchecksStarter {
 
     @Bean
-    @ConfigurationProperties("management.health.actuator")
     public HealthActuatorProperties healthActuatorProperties() {
         return new HealthActuatorProperties();
     }
@@ -31,7 +30,6 @@ public class ActuatorHealthchecksStarter {
     }
 
     @Bean
-    @ConfigurationProperties("management.health.http")
     public HealthHttpProperties healthHttpProperties(){
         return new HealthHttpProperties();
     }
@@ -42,7 +40,6 @@ public class ActuatorHealthchecksStarter {
     }
 
     @Bean
-    @ConfigurationProperties("management.health.port")
     public HealthPortProperties healthPortProperties() {
         return new HealthPortProperties();
     }

@@ -1,0 +1,6 @@
+name: sanitizer
+title: sanitizer extension
+version: 0.0.1
+nav:
+- modules/ROOT/nav.adoc
+

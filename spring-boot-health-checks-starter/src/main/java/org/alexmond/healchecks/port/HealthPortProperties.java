@@ -11,6 +11,7 @@ import java.util.Map;
  */
 
 @Data
+@ConfigurationProperties("management.health.port")
 public class HealthPortProperties {
 
     /**
