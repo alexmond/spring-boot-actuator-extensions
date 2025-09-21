@@ -21,6 +21,7 @@ public class SanitizingProperties {
      * Default: [".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*"]
      */
     private List<String> keyPatterns = List.of(".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*");
+
     /**
      * List of regex patterns to match values for sanitization.
      * Default patterns:

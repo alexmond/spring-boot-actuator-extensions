@@ -1,6 +1,5 @@
 package org.alexmond.actuator.sanitizer;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.SanitizingFunction;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties
-@RequiredArgsConstructor
 public class ActuatorConfigSanitizingStarter {
 
     /**
@@ -24,7 +22,9 @@ public class ActuatorConfigSanitizingStarter {
      * @return a new instance of SanitizingProperties with default settings
      */
     @Bean
-    public SanitizingProperties defaultSanitizingProperties(){return new SanitizingProperties();};
+    public SanitizingProperties sanitizingProperties() {
+        return new SanitizingProperties();
+    }
 
     /**
      * Creates a customized sanitizing function using the provided properties.
@@ -36,5 +36,4 @@ public class ActuatorConfigSanitizingStarter {
     public SanitizingFunction customParameterizedSanitizingFunction(SanitizingProperties sanitizingProperties) {
         return new ParameterizedSanitizingFunction(sanitizingProperties);
     }
-
 }

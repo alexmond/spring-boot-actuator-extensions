@@ -6,7 +6,6 @@ testprop:
       pass1:  just some password
       pass2:  just some password
 
-
 management:
   endpoint:
     health:

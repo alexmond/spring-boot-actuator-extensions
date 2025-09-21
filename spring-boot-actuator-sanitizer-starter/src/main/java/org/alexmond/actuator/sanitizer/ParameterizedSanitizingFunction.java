@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ParameterizedSanitizingFunction implements SanitizingFunction {
 
-    private final SanitizingProperties properties;
+    private final SanitizingProperties sanitizingProperties;
 
     // Lazy initialization of compiled patterns
     private List<Pattern> compiledKeyPatterns;
@@ -39,7 +39,7 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
      */
     @Override
     public SanitizableData apply(SanitizableData data) {
-        if (!properties.isEnabled()) {
+        if (!sanitizingProperties.isEnabled()) {
             return data;
         }
 
@@ -47,15 +47,14 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
         Object value = data.getValue();
 
         if (shouldSanitize(key)) {
-            return data.withValue(properties.getMaskValue());
+            return data.withValue(sanitizingProperties.getMaskValue());
         }
 
         // Handle nested objects if enabled
-        if (properties.isSanitizeValues() && value instanceof String) {
-            String stringValue = (String) value;
+        if (sanitizingProperties.isSanitizeValues() && value instanceof String stringValue) {
             // Check if the value itself looks like a sensitive value
             if (looksLikeSensitiveValue(stringValue)) {
-                return data.withValue(properties.getMaskValue());
+                return data.withValue(sanitizingProperties.getMaskValue());
             }
         }
 
@@ -73,14 +72,14 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
         if (key == null) {
             return false;
         }
-        
+
         // skip own configuration
-        if (key.startsWith("management.endpoint.sanitizing")){
+        if (key.startsWith("management.endpoint.sanitizing")) {
             return false;
         }
 
         // Check exact matches (case-insensitive)
-        if (properties.getKeys().stream()
+        if (sanitizingProperties.getKeys().stream()
                 .anyMatch(sensitiveKey -> key.toLowerCase().contains(sensitiveKey.toLowerCase()))) {
             return true;
         }
@@ -115,7 +114,7 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
      */
     private List<Pattern> getCompiledKeyPatterns() {
         if (compiledKeyPatterns == null) {
-            compiledKeyPatterns = properties.getKeyPatterns().stream()
+            compiledKeyPatterns = sanitizingProperties.getKeyPatterns().stream()
                     .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
                     .toList();
         }
@@ -130,7 +129,7 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
      */
     private List<Pattern> getCompiledValuePatterns() {
         if (compiledValuePatterns == null) {
-            compiledValuePatterns = properties.getValuePatterns().stream()
+            compiledValuePatterns = sanitizingProperties.getValuePatterns().stream()
                     .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
                     .toList();
         }

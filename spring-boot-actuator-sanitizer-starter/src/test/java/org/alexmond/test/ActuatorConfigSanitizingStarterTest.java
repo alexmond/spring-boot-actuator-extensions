@@ -36,11 +36,10 @@ class ActuatorConfigSanitizingStarterTest {
     @Test
     void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
         // Act
-        Object result = actuatorConfigSanitizingStarter.defaultSanitizingProperties();
+        Object result = actuatorConfigSanitizingStarter.sanitizingProperties();
         // Assert
         assertNotNull(result);
     }
-
 
     @ParameterizedTest
     @CsvSource({
@@ -53,9 +52,7 @@ class ActuatorConfigSanitizingStarterTest {
         StringBuffer content = new StringBuffer();
         mockMvc.perform(get("/actuator/env"))
                 .andExpect(status().isOk())
-                .andDo(result -> {
-                    content.append(result.getResponse().getContentAsString());
-                });
+                .andDo(result -> content.append(result.getResponse().getContentAsString()));
         log.info("actuator content {}", content);
 
         JsonNode jsonNode = objectMapper.readTree(content.toString());
@@ -74,17 +71,13 @@ class ActuatorConfigSanitizingStarterTest {
         StringBuffer content = new StringBuffer();
         mockMvc.perform(get("/actuator/configprops"))
                 .andExpect(status().isOk())
-                .andDo(result -> {
-                    content.append(result.getResponse().getContentAsString());
-                });
+                .andDo(result -> content.append(result.getResponse().getContentAsString()));
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(content.toString());
         JsonNode testConfig = root.findValue("testConfig");
 
         assertEquals(value, root.findValue("testConfig").at(node).asText());
-
-
     }
 
 
