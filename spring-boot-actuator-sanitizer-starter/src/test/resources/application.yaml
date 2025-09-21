@@ -1,4 +1,4 @@
-test:
+testprop:
   password: just some password
   token: just some token
   multiple:

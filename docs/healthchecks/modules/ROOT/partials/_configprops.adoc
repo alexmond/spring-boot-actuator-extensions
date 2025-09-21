@@ -1,0 +1,18 @@
+.Configuration Properties
+|===
+|Name |Default Value |Description
+
+|management.health.actuator.sites
+|{}
+|Map of site configurations where key is site identifier and value contains site-specific settings for actuator health checks.
+
+|management.health.http.sites
+|{}
+|Map of site configurations where key is site identifier and value contains site-specific settings for HTTP health checks.
+
+|management.health.port.sites
+|{}
+|Map of site configurations where key is site identifier and value contains port availability check settings.
+
+|===
+

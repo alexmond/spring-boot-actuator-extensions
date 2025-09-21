@@ -1,0 +1,81 @@
+= Spring Boot Actuator additional health checks
+Alex Mondshain <alex.mondshain@gmail.com>
+2025-09-15
+:revnumber: 0.0.3
+:example-caption!:
+:source-highlighter: highlight.js
+
+== Overview
+
+Spring Boot Actuator Health Checks Starter provides additional health indicators for monitoring external services and dependencies:
+
+* Remote Spring Boot Actuator endpoints health check
+* HTTP endpoint availability check
+* TCP port availability check
+
+== Installation
+
+Add the following dependency to your `pom.xml`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-health-checks-starter</artifactId>
+    <version>0.0.3</version>
+</dependency>
+----
+
+== Configuration
+
+=== Actuator Health Check
+
+Monitors health of remote Spring Boot Actuator endpoints.
+
+[source,yaml]
+----
+management:
+  health:
+    actuator:
+      sites:
+        service1:
+          url: http://service1.example.com/actuator/health
+          username: admin  
+          password: secret
+----
+
+=== HTTP Health Check 
+
+Checks availability of HTTP endpoints.
+
+[source,yaml]
+----
+management:
+  health:
+    http:
+      sites:
+        website:
+          url: https://example.com
+          expectedStatus: 200
+----
+
+=== Port Health Check
+
+Verifies if TCP ports are accessible.
+
+[source,yaml]
+----
+management:
+  health:
+    port:
+      sites:
+        database:
+          host: db.example.com
+          port: 5432
+----
+
+== Configuration Properties
+
+Below you can find a list of configuration properties.
+
+include::partial$_configprops.adoc[]
