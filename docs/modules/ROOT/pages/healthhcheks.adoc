@@ -22,7 +22,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>org.alexmond</groupId>
     <artifactId>spring-boot-health-checks-starter</artifactId>
-    <version>0.0.3</version>
+    <version>{page-component-version}</version>
 </dependency>
 ----
 
@@ -38,10 +38,10 @@ management:
   health:
     actuator:
       sites:
-        service1:
-          url: http://service1.example.com/actuator/health
-          username: admin  
-          password: secret
+        self:
+          url: http://localhost:8080/actuator/health
+          timeout: 10s
+          interval: 1m
 ----
 
 === HTTP Health Check 
@@ -54,9 +54,13 @@ management:
   health:
     http:
       sites:
-        website:
-          url: https://example.com
-          expectedStatus: 200
+        self:
+          url: http://localhost:8080/actuator/info
+          timeout: 10s
+          interval: 1m
+        self2:
+          url: http://localhost:8080/actuator/info
+          status: bad_request
 ----
 
 === Port Health Check
@@ -72,10 +76,12 @@ management:
         database:
           host: db.example.com
           port: 5432
+          timeout: 10s
+          interval: 1m
 ----
 
 == Configuration Properties
 
 Below you can find a list of configuration properties.
 
-include::partial$_configprops.adoc[]
+include::partial$_hconfigprops.adoc[]

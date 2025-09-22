@@ -7,15 +7,21 @@ management:
       sites:
         self:
           url: http://localhost:8080/actuator/health
+          timeout: 10s
+          interval: 1m
     port:
       sites:
         self:
           host: localhost
           port: 8080
+          timeout: 10s
+          interval: 1m
     http:
       sites:
         self:
           url: http://localhost:8080/actuator/info
+          timeout: 10s
+          interval: 1m
         self2:
           url: http://localhost:8080/actuator/info
           status: bad_request

@@ -20,7 +20,7 @@
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
     </properties>
     <url>https://alexmond.github.io/</url>
-    <description>Spring boot actuator extensions</description>
+    <description>Spring boot actuator extensions root</description>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>

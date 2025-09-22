@@ -1,6 +1,7 @@
 package org.alexmond.healchecks.http;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.alexmond.healchecks.common.CommonSite;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +10,7 @@ import java.time.Duration;
 /**
  * Configuration properties for an individual site's health check.
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class HttpSite extends CommonSite {
     /**

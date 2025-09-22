@@ -10,15 +10,30 @@ import org.springframework.web.client.RestClientException;
 
 import java.util.Map;
 
+/**
+ * Health indicator that monitors external actuator endpoints.
+ * Implements health checks for Spring Boot Actuator endpoints with caching support.
+ */
 @RequiredArgsConstructor
 public class ExternalActuatorHealthIndicator extends CommonHealthIndicator {
 
     private final HealthActuatorProperties properties;
 
+    /**
+     * Retrieves the configured sites for health checks.
+     *
+     * @return Map of site names to their configurations
+     */
     protected Map<String, ? extends CommonSite> getSites() {
         return properties.getSites();
     }
 
+    /**
+     * Performs health check for a specific actuator endpoint.
+     *
+     * @param commonSite The site configuration to check
+     * @return Health status of the actuator endpoint
+     */
     protected Health checkSite(CommonSite commonSite) {
         ActuatorSite site = (ActuatorSite) commonSite;
         if (site == null) {

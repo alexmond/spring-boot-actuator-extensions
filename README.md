@@ -9,15 +9,22 @@ capabilities.
 - Actuator endpoint sanitization
 - Sample test application demonstrating usage
 
+## Documentation
+
+For full documentation, please visit
+our [documentation website](https://alexmond.github.io/spring-boot-actuator-extensions/).
+
 ## Modules
 
-- **spring-boot-health-checks**: Additional health check indicators
-- **spring-boot-actuator-sanitizer**: Sanitization utilities for actuator endpoints
-- **spring-boot-test-app**: Sample application demonstrating the extensions
+- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring application
+  status
+- **spring-boot-actuator-sanitizer**: Utility library for sanitizing sensitive data in actuator endpoint responses
+- **spring-boot-test-app**: Example Spring Boot application showcasing usage of the extensions
 
 ## Requirements
 
 - Java 17
 - Spring Boot 3.5.3
 - Maven
+
 

@@ -66,4 +66,4 @@ management:
 
 Below you can find a list of configuration properties.
 
-include::partial$_configprops.adoc[]
+include::partial$_sconfigprops.adoc[]

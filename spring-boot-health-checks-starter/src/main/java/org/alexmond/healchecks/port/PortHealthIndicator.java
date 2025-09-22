@@ -1,10 +1,11 @@
 package org.alexmond.healchecks.port;
 
+import lombok.RequiredArgsConstructor;
+import org.alexmond.healchecks.common.CommonHealthIndicator;
+import org.alexmond.healchecks.common.CommonSite;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
@@ -15,24 +16,23 @@ import java.util.concurrent.atomic.AtomicReference;
  * Health indicator that monitors connectivity to configured ports.
  * Implements periodic health checks with caching support.
  */
-public class PortHealthIndicator implements HealthIndicator {
+@RequiredArgsConstructor
+public class PortHealthIndicator extends CommonHealthIndicator  {
 
     private final HealthPortProperties properties;
-    private static final Map<String, Health> cachedHealth = new ConcurrentHashMap<>();
-    private static final Map<String, Long> lastCheck = new ConcurrentHashMap<>();
 
-    public PortHealthIndicator(HealthPortProperties properties) {
-        this.properties = properties;
+    protected Map<String, ? extends CommonSite> getSites() {
+        return properties.getSites();
     }
-
 
     /**
      * Checks connectivity to a specific port on a host.
      *
-     * @param site The site configuration containing host and port details
+     * @param commonSite The site configuration containing host and port details
      * @return Health status of the connection attempt
      */
-    private Health checkSite(PortSite site) {
+    protected Health checkSite(CommonSite commonSite) {
+        PortSite site = (PortSite) commonSite;
         if (site == null) {
             return Health.unknown().withDetail("error", "Site configuration is null").build();
         }
@@ -54,43 +54,5 @@ public class PortHealthIndicator implements HealthIndicator {
                 .build();
         }
         return health;
-    }
-
-    @Override
-    public Health health() {
-        if (properties == null || properties.getSites() == null) {
-            return Health.unknown().withDetail("error", "No sites configured").build();
-        }
-
-        Health.Builder builder = Health.up()
-                .withDetail("checkedSites", properties.getSites().size())
-                .withDetail("timestamp", System.currentTimeMillis());
-
-        AtomicReference<Boolean> anyDown = new AtomicReference<>(false);
-
-        properties.getSites().forEach((name, site) -> {
-            if (site != null) {
-                Health health;
-                Long now = System.currentTimeMillis();
-                Long lastCheckTime = lastCheck.get(name);
-
-                if (lastCheckTime != null && cachedHealth.get(name) != null
-                        && now - lastCheckTime < site.getInterval().toMillis()) {
-                    health = cachedHealth.get(name);
-                } else {
-                    health = checkSite(site);
-                    lastCheck.put(name, now);
-                    cachedHealth.put(name, health);
-                }
-
-                builder.withDetail(name, health);
-
-                if (!"UP".equals(health.getStatus().getCode())) {
-                    anyDown.set(true);
-                }
-            }
-        });
-
-        return anyDown.get() ? builder.down().build() : builder.build();
     }
 }

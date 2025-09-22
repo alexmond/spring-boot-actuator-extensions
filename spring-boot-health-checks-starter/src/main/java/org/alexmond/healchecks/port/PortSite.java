@@ -1,6 +1,7 @@
 package org.alexmond.healchecks.port;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.alexmond.healchecks.common.CommonSite;
 
 import java.time.Duration;
@@ -8,6 +9,7 @@ import java.time.Duration;
 /**
  * Configuration properties for a health check site.
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class PortSite extends CommonSite {
     /**

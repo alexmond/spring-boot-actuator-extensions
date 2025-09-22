@@ -9,11 +9,14 @@
     </parent>
     <artifactId>spring-boot-health-checks-starter</artifactId>
     <version>0.0.3-SNAPSHOT</version>
-    <name>spring-boot-health-checks</name>
-    <description>spring-boot-health-checks</description>
+    <name>spring-boot-health-checks-starter</name>
     <properties>
         <java.version>17</java.version>
     </properties>
+    <url>https://alexmond.github.io/</url>
+    <description>Spring Boot starter providing additional health check indicators for HTTP endpoints and open port
+        availability
+    </description>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
