@@ -5,10 +5,10 @@
     <parent>
         <groupId>org.alexmond</groupId>
         <artifactId>spring-boot-actuator-extensions-root</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>spring-boot-actuator-sanitizer-starter</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>spring-boot-actuator-sanitizer</name>
     <properties>
         <java.version>17</java.version>
