@@ -3,9 +3,9 @@
 A collection of extensions and utilities for Spring Boot Actuator, enhancing application monitoring and health check
 capabilities.
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.alexmond/spring-boot-actuator-sanitizer-starter.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.alexmond/spring-boot-actuator-sanitizer-starter)
+[![Maven Central sanitizer](https://img.shields.io/maven-central/v/org.alexmond/spring-boot-actuator-sanitizer-starter.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.alexmond/spring-boot-actuator-sanitizer-starter)
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.alexmond/spring-boot-health-checks-starter.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.alexmond/spring-boot-health-checks-starter)
+[![Maven Central health checks](https://img.shields.io/maven-central/v/org.alexmond/spring-boot-health-checks-starter.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.alexmond/spring-boot-health-checks-starter)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot-config-json-schema/maven.yml)](https://github.com/alexmond/spring-boot-actuator-extensions/actions)
