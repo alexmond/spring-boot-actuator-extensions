@@ -19,7 +19,7 @@ capabilities.
 ## Documentation
 
 For full documentation, please visit
-our [documentation website](https://alexmond.github.io/spring-boot-actuator-extensions/).
+our [documentation website](https://alexmond.github.io/extensions/current/index.html).
 
 ## Modules
 
