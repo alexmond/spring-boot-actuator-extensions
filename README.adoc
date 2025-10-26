@@ -1,0 +1,46 @@
+= Spring Boot actuator extensions
+:toc:
+
+image:https://img.shields.io/maven-central/v/org.alexmond/spring-boot-actuator-sanitizer-starter.svg?label=Maven%20Central%20sanitizer[Maven Central sanitizer,link=https://search.maven.org/artifact/org.alexmond/spring-boot-actuator-sanitizer-starter]
+
+image:https://img.shields.io/maven-central/v/org.alexmond/spring-boot-health-checks-starter.svg?label=Maven%20Central%20health%20checks[Maven Central health checks,link=https://search.maven.org/artifact/org.alexmond/spring-boot-health-checks-starter]
+
+image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[License,link=LICENSE]
+image:https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot-config-json-schema/maven.yml[Build Status,link=https://github.com/alexmond/spring-boot-actuator-extensions/actions]
+image:https://img.shields.io/badge/Java-17%2B-blue.svg[Java 17+,link=https://openjdk.org/]
+
+
+A collection of extensions and utilities for Spring Boot Actuator, enhancing application monitoring and health check capabilities.
+
+
+[#_features]
+== Features
+
+* Custom health check indicators
+* Actuator endpoint sanitization
+* Sample test application demonstrating usage
+
+[#_documentation]
+== Documentation
+
+For full documentation, please visit our link:https://alexmond.github.io/extensions/current/index.html[documentation website].
+
+[#_modules]
+== Modules
+
+- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring application
+  status
+- **spring-boot-actuator-sanitizer**: Utility library for sanitizing sensitive data in actuator endpoint responses
+- **spring-boot-test-app**: Example Spring Boot application showcasing usage of the extensions
+
+[#_requirements]
+== Requirements
+
+* Java 17+
+* Spring Boot 3.5.+
+* Maven
+
+== Changelog
+include::CHANGELOG.adoc[]
+
+

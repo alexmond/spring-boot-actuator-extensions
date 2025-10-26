@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.alexmond</groupId>
-        <artifactId>spring-boot-actuator-extensions-root</artifactId>
+        <artifactId>spring-boot-actuator-extensions-parent</artifactId>
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-actuator-sanitizer-starter</artifactId>
@@ -80,6 +80,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

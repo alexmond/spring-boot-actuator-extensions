@@ -1,6 +1,6 @@
 name: extensions
 title: Actuator extensions
-version: 1.0.0
+version: true
 nav:
 - modules/ROOT/nav.adoc
 
