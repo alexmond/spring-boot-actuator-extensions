@@ -10,9 +10,18 @@
 |`[".*password.*", ".*secret.*", ".*token.*", ".*key.*", ".*credential.*"]`
 |List of regex patterns to match property keys for sanitization.
 
+|management.endpoint.sanitizing.additional-key-patterns
+|`[]`
+|Additional regex patterns to match property keys for sanitization. These patterns are combined with the default patterns list.
+
 |management.endpoint.sanitizing.keys
 |`["password", "secret", "token", "key", "credential", "private"]`
 |List of exact property keys to sanitize (case-insensitive).
+
+|management.endpoint.sanitizing.additional-keys
+|`[]`
+|Additional exact property keys to sanitize (case-insensitive). These keys are combined with the default keys list.
+
 
 |management.endpoint.sanitizing.mask-value
 |`\******`
