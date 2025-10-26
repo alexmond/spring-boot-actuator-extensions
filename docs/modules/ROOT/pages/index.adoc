@@ -28,3 +28,7 @@ Use this module as a reference for implementing the extensions in your own appli
 * Java 17 or higher
 * Spring Boot 3.5.3
 * Maven build tool
+
+== Changelog
+
+include::CHANGELOG.adoc[]

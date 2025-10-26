@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.alexmond</groupId>
-        <artifactId>spring-boot-actuator-extensions-root</artifactId>
+        <artifactId>spring-boot-actuator-extensions-parent</artifactId>
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-test-app</artifactId>
