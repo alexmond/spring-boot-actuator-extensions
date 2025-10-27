@@ -8,6 +8,7 @@ image:https://img.shields.io/maven-central/v/org.alexmond/spring-boot-health-che
 image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[License,link=LICENSE]
 image:https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot-config-json-schema/maven.yml[Build Status,link=https://github.com/alexmond/spring-boot-actuator-extensions/actions]
 image:https://img.shields.io/badge/Java-17%2B-blue.svg[Java 17+,link=https://openjdk.org/]
+image:https://codecov.io/gh/alexmond/spring-boot-actuator-extensions/graph/badge.svg?token=0JXWH3R9QI[Code Coverage,link=https://codecov.io/gh/alexmond/spring-boot-actuator-extensions]
 
 
 A collection of extensions and utilities for Spring Boot Actuator, enhancing application monitoring and health check capabilities.
