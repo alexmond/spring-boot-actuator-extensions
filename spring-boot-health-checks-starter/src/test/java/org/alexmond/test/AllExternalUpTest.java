@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Slf4j
 @ActiveProfiles("good")
+@DirtiesContext
 class AllExternalUpTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -40,6 +42,7 @@ class AllExternalUpTest {
 
 
     @Test
+    @DirtiesContext
     public void UPHealthCheckTest() throws JsonProcessingException, InterruptedException {
         StringBuffer content = new StringBuffer();
 //        Thread.sleep(300000);

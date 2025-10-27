@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Slf4j
 @ActiveProfiles("bad")
+@DirtiesContext
 class AllExternalDownTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -47,6 +49,7 @@ class AllExternalDownTest {
 
 
     @Test
+    @DirtiesContext
     public void UPHealthCheckTest() throws IOException, InterruptedException {
         StringBuffer content = new StringBuffer();
 //        Thread.sleep(300000);
