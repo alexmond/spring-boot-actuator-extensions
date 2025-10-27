@@ -1,1 +1,1 @@
-- **1.0.1** Upgrade to Spring Boot 3.5.7. Added code coverage reporting and introduced two new configuration options for customizing sanitization by extending default key and pattern lists.
+- **1.0.2** Upgrade to Spring Boot 3.5.7. Added code coverage reporting and introduced two new configuration options for customizing sanitization by extending default key and pattern lists.
