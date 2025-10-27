@@ -44,7 +44,7 @@ class AllExternalUpTest {
         StringBuffer content = new StringBuffer();
 //        Thread.sleep(300000);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8082/actuator/health", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9082/actuator/health", String.class);
         content.append(response.getBody());
         log.info("actuator content {}", content);
         JsonNode jsonNode = objectMapper.readTree(content.toString());

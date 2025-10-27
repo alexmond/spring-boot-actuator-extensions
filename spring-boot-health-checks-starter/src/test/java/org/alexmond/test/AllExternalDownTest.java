@@ -52,7 +52,7 @@ class AllExternalDownTest {
 //        Thread.sleep(300000);
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/actuator/health"))
+                .uri(URI.create("http://localhost:9082/actuator/health"))
                 .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

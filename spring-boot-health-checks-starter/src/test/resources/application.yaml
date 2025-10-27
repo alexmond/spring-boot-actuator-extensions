@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 9082
 
 management:
   endpoint:
@@ -37,7 +37,7 @@ management:
     actuator:
       sites:
         self:
-          url: http://localhost:8082/healthDown
+          url: http://localhost:9082/healthDown
           timeout: 10s
           interval: 1m
     port:
@@ -54,7 +54,7 @@ management:
           timeout: 10s
           interval: 1m
         self2:
-          url: http://localhost:8082/actuator/info
+          url: http://localhost:9082/actuator/info
           status: bad_request
 ---
 spring:
@@ -67,21 +67,21 @@ management:
     actuator:
       sites:
         self:
-          url: http://localhost:8082/healthUp
+          url: http://localhost:9082/healthUp
           timeout: 10s
           interval: 1m
     port:
       sites:
         self:
           host: localhost
-          port: 8082
+          port: 9082
           timeout: 10s
           interval: 1m
     http:
       sites:
         self:
-          url: http://localhost:8082/actuator/info
+          url: http://localhost:9082/actuator/info
           timeout: 10s
           interval: 1m
         self2:
-          url: http://localhost:8082/actuator/env
+          url: http://localhost:9082/actuator/env
