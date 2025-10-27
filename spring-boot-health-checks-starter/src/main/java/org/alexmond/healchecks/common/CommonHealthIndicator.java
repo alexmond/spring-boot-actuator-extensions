@@ -57,8 +57,10 @@ public abstract class CommonHealthIndicator implements HealthIndicator {
             if (site != null) {
                 Health health;
                 Long now = System.currentTimeMillis();
-                Long lastCheckTime = cachedHealth.get(name).getLastCheck();
-
+                Long lastCheckTime = null;
+                if(cachedHealth.containsKey(name)) {
+                    lastCheckTime = cachedHealth.get(name).getLastCheck();
+                }
                 if (lastCheckTime != null && cachedHealth.get(name) != null
                     && now - lastCheckTime < site.getInterval().toMillis()) {
                     health = cachedHealth.get(name).getCachedHealth();

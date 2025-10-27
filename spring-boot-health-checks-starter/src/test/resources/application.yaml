@@ -2,30 +2,6 @@ server:
   port: 8082
 
 management:
-  health:
-    actuator:
-      sites:
-        self:
-          url: http://localhost:8080/actuator/health
-          timeout: 10s
-          interval: 1m
-    port:
-      sites:
-        self:
-          host: localhost
-          port: 8080
-          timeout: 10s
-          interval: 1m
-    http:
-      sites:
-        self:
-          url: http://localhost:8080/actuator/info
-          timeout: 10s
-          interval: 1m
-        self2:
-          url: http://localhost:8080/actuator/info
-          status: bad_request
-
   endpoint:
     health:
       access: unrestricted
@@ -50,3 +26,62 @@ management:
 info:
   tags:
     environment: OPS
+
+---
+spring:
+  config:
+    activate:
+      on-profile: bad
+management:
+  health:
+    actuator:
+      sites:
+        self:
+          url: http://localhost:8082/healthDown
+          timeout: 10s
+          interval: 1m
+    port:
+      sites:
+        self:
+          host: localhost
+          port: 8083
+          timeout: 10s
+          interval: 1m
+    http:
+      sites:
+        self:
+          url: http://localhost:8083/actuator/info
+          timeout: 10s
+          interval: 1m
+        self2:
+          url: http://localhost:8082/actuator/info
+          status: bad_request
+---
+spring:
+  config:
+    activate:
+      on-profile: good
+
+management:
+  health:
+    actuator:
+      sites:
+        self:
+          url: http://localhost:8082/healthUp
+          timeout: 10s
+          interval: 1m
+    port:
+      sites:
+        self:
+          host: localhost
+          port: 8082
+          timeout: 10s
+          interval: 1m
+    http:
+      sites:
+        self:
+          url: http://localhost:8082/actuator/info
+          timeout: 10s
+          interval: 1m
+        self2:
+          url: http://localhost:8082/actuator/env

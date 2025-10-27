@@ -77,6 +77,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>  <!-- Optional to exclude from production builds if desired -->
+        </dependency>
     </dependencies>
 
     <build>
