@@ -4,20 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.alexmond.healchecks.common.CommonHealthIndicator;
 import org.alexmond.healchecks.common.CommonSite;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Health indicator that monitors connectivity to configured ports.
  * Implements periodic health checks with caching support.
  */
 @RequiredArgsConstructor
-public class PortHealthIndicator extends CommonHealthIndicator  {
+public class PortHealthIndicator extends CommonHealthIndicator {
 
     private final HealthPortProperties properties;
 
@@ -51,7 +48,7 @@ public class PortHealthIndicator extends CommonHealthIndicator  {
                     .withDetail("port", site.getPort())
                     .withDetail("error", ex.getMessage())
                     .withException(ex)
-                .build();
+                    .build();
         }
         return health;
     }

@@ -12,7 +12,6 @@ import org.springframework.web.client.RestClientException;
 import java.util.Map;
 
 
-
 /**
  * Health indicator that monitors the status of external HTTP endpoints.
  * Implements Spring Boot's HealthIndicator interface to provide health information
@@ -57,8 +56,8 @@ public class ExternalHttpHealthIndicator extends CommonHealthIndicator {
                 health = Health.up()
                         .withDetail("statusCode", statusCode)
                         .build();
-            } else  {
-                health = Health.down().withDetail("status code", statusCode).withDetail("expected status code",site.getStatus()).build();
+            } else {
+                health = Health.down().withDetail("status code", statusCode).withDetail("expected status code", site.getStatus()).build();
             }
         } catch (RestClientException ex) {
             health = Health.down()

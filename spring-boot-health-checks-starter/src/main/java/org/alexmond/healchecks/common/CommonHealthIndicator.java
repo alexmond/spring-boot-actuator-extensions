@@ -17,6 +17,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class CommonHealthIndicator implements HealthIndicator {
 
     /**
+     * Thread-safe cache for storing health check results.
+     */
+    private final Map<String, HealthCache> cachedHealth = new ConcurrentHashMap<>();
+
+    /**
      * Returns the map of sites to be health checked.
      *
      * @return Map of site names to their configurations
@@ -30,11 +35,6 @@ public abstract class CommonHealthIndicator implements HealthIndicator {
      * @return Health status of the site
      */
     abstract protected Health checkSite(CommonSite site);
-
-    /**
-     * Thread-safe cache for storing health check results.
-     */
-    private final Map<String, HealthCache> cachedHealth = new ConcurrentHashMap<>();
 
     /**
      * Performs health checks for all configured sites.
@@ -58,15 +58,15 @@ public abstract class CommonHealthIndicator implements HealthIndicator {
                 Health health;
                 Long now = System.currentTimeMillis();
                 Long lastCheckTime = null;
-                if(cachedHealth.containsKey(name)) {
+                if (cachedHealth.containsKey(name)) {
                     lastCheckTime = cachedHealth.get(name).getLastCheck();
                 }
                 if (lastCheckTime != null && cachedHealth.get(name) != null
-                    && now - lastCheckTime < site.getInterval().toMillis()) {
+                        && now - lastCheckTime < site.getInterval().toMillis()) {
                     health = cachedHealth.get(name).getCachedHealth();
                 } else {
                     health = checkSite(site);
-                    cachedHealth.put(name, new HealthCache(health,now));
+                    cachedHealth.put(name, new HealthCache(health, now));
                 }
 
                 builder.withDetail(name, health);

@@ -20,7 +20,6 @@ The sanitizer provides flexible configuration options for masking sensitive data
 * Key pattern matching - use regular expressions to match property keys
 * Value pattern matching - sanitize based on value content patterns
 
-
 == Configuration
 
 To use the sanitizer, add the following dependency to your `pom.xml`:

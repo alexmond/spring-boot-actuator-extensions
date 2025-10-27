@@ -21,17 +21,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 class ActuatorConfigSanitizingStarterTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ActuatorConfigSanitizingStarter actuatorConfigSanitizingStarter;
 
     @Test
     void contextLoads() {
     }
-
-    @Autowired
-    private ActuatorConfigSanitizingStarter actuatorConfigSanitizingStarter;
 
     @Test
     void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {

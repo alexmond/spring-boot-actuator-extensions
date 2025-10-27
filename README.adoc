@@ -10,9 +10,7 @@ image:https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot
 image:https://img.shields.io/badge/Java-17%2B-blue.svg[Java 17+,link=https://openjdk.org/]
 image:https://codecov.io/gh/alexmond/spring-boot-actuator-extensions/graph/badge.svg?token=0JXWH3R9QI[Code Coverage,link=https://codecov.io/gh/alexmond/spring-boot-actuator-extensions]
 
-
 A collection of extensions and utilities for Spring Boot Actuator, enhancing application monitoring and health check capabilities.
-
 
 [#_features]
 == Features
@@ -29,8 +27,7 @@ For full documentation, please visit our link:https://alexmond.github.io/extensi
 [#_modules]
 == Modules
 
-- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring application
-  status
+- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring application status
 - **spring-boot-actuator-sanitizer**: Utility library for sanitizing sensitive data in actuator endpoint responses
 - **spring-boot-test-app**: Example Spring Boot application showcasing usage of the extensions
 
@@ -42,6 +39,7 @@ For full documentation, please visit our link:https://alexmond.github.io/extensi
 * Maven
 
 == Changelog
+
 include::CHANGELOG.adoc[]
 
 

@@ -3,8 +3,8 @@ testprop:
   token: just some token
   multiple:
     password:
-      pass1:  just some password
-      pass2:  just some password
+      pass1: just some password
+      pass2: just some password
 
 management:
   endpoint:
