@@ -22,7 +22,7 @@ A collection of extensions and utilities for Spring Boot Actuator, enhancing app
 [#_documentation]
 == Documentation
 
-For full documentation, please visit our link:https://alexmond.github.io/extensions/current/index.html[documentation website].
+For full documentation, please visit our link:https://www.alexmond.org/extensions/current/index.html[documentation website].
 
 [#_modules]
 == Modules

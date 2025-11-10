@@ -26,7 +26,7 @@
             -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco-maven-plugin.version}/org.jacoco.agent-${jacoco-maven-plugin.version}-runtime.jar=destfile=target/jacoco.exec
         </jacoco.agent.arg>
     </properties>
-    <url>https://alexmond.github.io/extensions/current/index.html</url>
+    <url>https://www.alexmond.org/extensions/current/index.html</url>
     <description>Spring boot actuator extensions parent</description>
     <licenses>
         <license>

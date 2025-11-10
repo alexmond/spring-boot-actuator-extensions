@@ -13,7 +13,7 @@
     <properties>
         <java.version>17</java.version>
     </properties>
-    <url>https://alexmond.github.io/</url>
+    <url>https://www.alexmond.org/</url>
     <description>Spring Boot starter providing additional health check indicators for HTTP endpoints and open port
         availability
     </description>

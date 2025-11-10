@@ -13,7 +13,7 @@
     <properties>
         <java.version>17</java.version>
     </properties>
-    <url>https://alexmond.github.io/</url>
+    <url>https://www.alexmond.org/</url>
     <description>Spring Boot starter providing sanitization for sensitive data in actuator endpoint responses, filtering
         out security-critical information like passwords, tokens, and secrets.
     </description>
