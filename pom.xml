@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.alexmond</groupId>
     <artifactId>spring-boot-actuator-extensions-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>Spring boot actuator extensions</name>
     <packaging>pom</packaging>
 
