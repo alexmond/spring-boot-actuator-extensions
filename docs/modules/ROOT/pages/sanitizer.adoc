@@ -1,9 +1,12 @@
 = Spring Boot Actuator Sanitizing Starter
 Alex Mondshain <alex.mondshain@gmail.com>
-2025-09-15
-:revnumber: 0.0.3
+:revnumber: 1.0.5
 :example-caption!:
 :source-highlighter: highlight.js
+:description: Spring Boot Actuator Sanitizing starter for masking sensitive information in actuator endpoints
+:keywords: spring-boot, actuator, security, sanitizer, sensitive data, configuration properties
+:author: Alex Mondshain
+:email: alex.mondshain@gmail.com
 
 == Introduction
 

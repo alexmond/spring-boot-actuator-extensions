@@ -27,15 +27,16 @@ For full documentation, please visit our link:https://www.alexmond.org/extension
 [#_modules]
 == Modules
 
-- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring application status
-- **spring-boot-actuator-sanitizer**: Utility library for sanitizing sensitive data in actuator endpoint responses
-- **spring-boot-test-app**: Example Spring Boot application showcasing usage of the extensions
+- **spring-boot-health-checks**: Extension providing additional health check indicators for monitoring external HTTP, Actuator, and Port status.
+- **spring-boot-manual-health-starter**: Provides a manual health endpoint to control application health status for graceful shutdown and service state control.
+- **spring-boot-actuator-sanitizer**: Utility library for sanitizing sensitive data in actuator endpoint responses (e.g., /env, /configprops).
+- **spring-boot-test-app**: Example Spring Boot application showcasing usage of the extensions.
 
 [#_requirements]
 == Requirements
 
 * Java 17+
-* Spring Boot 3.5.+
+* Spring Boot 3.5.10
 * Maven
 
 == Changelog

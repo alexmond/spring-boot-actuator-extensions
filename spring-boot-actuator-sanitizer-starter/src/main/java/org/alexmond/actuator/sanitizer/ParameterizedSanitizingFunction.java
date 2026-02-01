@@ -26,8 +26,8 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
     private final SanitizingProperties sanitizingProperties;
 
     // Lazy initialization of compiled patterns
-    private List<Pattern> compiledKeyPatterns;
-    private List<Pattern> compiledValuePatterns;
+    private volatile List<Pattern> compiledKeyPatterns;
+    private volatile List<Pattern> compiledValuePatterns;
 
     /**
      * Applies sanitization rules to the given data based on configured properties.
@@ -109,14 +109,19 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
     /**
      * Lazily initializes and returns the compiled regex patterns for key matching.
      * Patterns are compiled case-insensitive and cached for performance.
+     * Uses double-checked locking for thread safety.
      *
      * @return List of compiled Pattern objects for key matching
      */
     private List<Pattern> getCompiledKeyPatterns() {
         if (compiledKeyPatterns == null) {
-            compiledKeyPatterns = sanitizingProperties.getKeyPatterns().stream()
-                    .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
-                    .toList();
+            synchronized (this) {
+                if (compiledKeyPatterns == null) {
+                    compiledKeyPatterns = sanitizingProperties.getKeyPatterns().stream()
+                            .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
+                            .toList();
+                }
+            }
         }
         return compiledKeyPatterns;
     }
@@ -124,14 +129,19 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
     /**
      * Lazily initializes and returns the compiled regex patterns for value matching.
      * Patterns are compiled case-insensitive and cached for performance.
+     * Uses double-checked locking for thread safety.
      *
      * @return List of compiled Pattern objects for value matching
      */
     private List<Pattern> getCompiledValuePatterns() {
         if (compiledValuePatterns == null) {
-            compiledValuePatterns = sanitizingProperties.getValuePatterns().stream()
-                    .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
-                    .toList();
+            synchronized (this) {
+                if (compiledValuePatterns == null) {
+                    compiledValuePatterns = sanitizingProperties.getValuePatterns().stream()
+                            .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
+                            .toList();
+                }
+            }
         }
         return compiledValuePatterns;
     }

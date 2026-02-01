@@ -1,2 +1,9 @@
+- **1.0.4**
+* Upgraded Spring Boot to 3.5.10.
+* Refactored `ManualHealthEndpoint`: Unified status management into a single `@WriteOperation`, added `@ReadOperation`.
+* Fixed package naming typo from `healchecks` to `healthchecks`.
+* Improved `ExternalHttpHealthIndicator` and `ExternalActuatorHealthIndicator` with better timeout handling and edge case tests.
+* Fixed auto-configuration for `spring-boot-manual-health-starter`.
+* Improved project documentation and README.
 - **1.0.3** Upgraded spring boot to 3.5.8, and other dependencies
 - **1.0.2** Upgrade to Spring Boot 3.5.7. Added code coverage reporting and introduced two new configuration options for customizing sanitization by extending default key and pattern lists.

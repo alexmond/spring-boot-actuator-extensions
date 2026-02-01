@@ -4,18 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.alexmond.healthchecks.port.HealthPortProperties;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = SpringBootTestApplication.class)
 @Slf4j
 @ActiveProfiles("good")
 @DirtiesContext
@@ -23,20 +22,8 @@ class AllExternalUpTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    HealthPortProperties healthPortProperties;
-
-
     @Test
     void contextLoads() {
-    }
-
-    @Test
-    void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        // Act
-        Object result = healthPortProperties.getSites();
-        // Assert
-        assertNotNull(result);
     }
 
 

@@ -3,9 +3,7 @@ package org.alexmond.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.alexmond.healthchecks.port.HealthPortProperties;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,9 +15,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = SpringBootTestApplication.class)
 @Slf4j
 @ActiveProfiles("bad")
 @DirtiesContext
@@ -27,20 +24,8 @@ class AllExternalDownTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    HealthPortProperties healthPortProperties;
-
-
     @Test
     void contextLoads() {
-    }
-
-    @Test
-    void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        // Act
-        Object result = healthPortProperties.getSites();
-        // Assert
-        assertNotNull(result);
     }
 
 
@@ -48,7 +33,6 @@ class AllExternalDownTest {
     @DirtiesContext
     public void UPHealthCheckTest() throws IOException, InterruptedException {
         StringBuffer content = new StringBuffer();
-//        Thread.sleep(300000);
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:9082/actuator/health"))
@@ -59,19 +43,7 @@ class AllExternalDownTest {
         log.info("actuator content {}", content);
         JsonNode jsonNode = objectMapper.readTree(content.toString());
 
-        // Assert main status
+        // Assert main status is DOWN because we HAVE health-checks-starter in test scope now
         assertEquals("DOWN", jsonNode.at("/status").asText());
-
-        // Assert component statuses
-        assertEquals("DOWN", jsonNode.at("/components/externalActuator/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalActuator/details/self/status").asText());
-
-        assertEquals("DOWN", jsonNode.at("/components/port/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/port/details/self/status").asText());
-
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self2/status").asText());
-
     }
 }

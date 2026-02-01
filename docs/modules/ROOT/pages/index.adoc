@@ -1,17 +1,29 @@
 = Spring Boot Actuator Extensions
 :toc: left
 :sectnums:
+:keywords: Spring Boot, Actuator, Monitoring, Health Checks, Java
+:description: A collection of Spring Boot Actuator extensions providing enhanced monitoring and health check capabilities for Java applications
+:author: Alex Mondshain
+:email: alex.mondshain@gmail.com
+:revnumber: 1.0.5
+:last-update-label: Last updated
+:last-update: 2026-01-31
 
+[.lead]
 == Introduction
 
 A collection of extensions and utilities for Spring Boot Actuator, providing enhanced monitoring and health check capabilities for your Spring Boot applications.
+These extensions help improve application observability and maintenance through comprehensive health checks and secure exposure of monitoring data.
 
 == Modules
 
 === spring-boot-health-checks
 
-Extension module that provides additional health check indicators for comprehensive application monitoring.
-These indicators help track various aspects of your application's health status and performance metrics.
+Extension module that provides additional health check indicators for comprehensive application monitoring (HTTP, Actuator, and Port status).
+
+=== spring-boot-manual-health-starter
+
+Provides a manual health endpoint to control application health status for graceful shutdown and service state control.
 
 === spring-boot-actuator-sanitizer
 
@@ -26,7 +38,7 @@ Use this module as a reference for implementing the extensions in your own appli
 == Requirements
 
 * Java 17 or higher
-* Spring Boot 3.5.x
+* Spring Boot 3.5.10
 * Maven build tool
 
 == Changelog

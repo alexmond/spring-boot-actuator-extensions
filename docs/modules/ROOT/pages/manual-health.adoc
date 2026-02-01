@@ -1,0 +1,89 @@
+= Manual Health Control
+Alex Mondshain <alex.mondshain@gmail.com>
+:revnumber: 1.0.5
+:example-caption!:
+:source-highlighter: highlight.js
+:keywords: Spring Boot, Actuator, Health Check, Manual Health, Graceful Shutdown
+:description: Manual health endpoint for Spring Boot Actuator to control application health status for graceful shutdown and service state control.
+
+== Overview
+
+The Spring Boot Manual Health Starter provides a dedicated actuator endpoint `/actuator/health-manual` that allows you to manually override the application's health status. 
+
+This is particularly useful for:
+* **Graceful Shutdown**: Setting the status to `OUT_OF_SERVICE` before actual shutdown to allow load balancers or service discovery to stop routing traffic to the instance.
+* **Maintenance**: Temporarily taking an instance out of service without stopping the application.
+* **Testing**: Simulating `DOWN` or `OUT_OF_SERVICE` states.
+
+== Installation
+
+Add the following dependency to your `pom.xml`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-manual-health-starter</artifactId>
+    <version>{page-component-version}</version>
+</dependency>
+----
+
+== Usage
+
+The manual health status is integrated into the standard Spring Boot `/actuator/health` endpoint. By default, the manual status is `UP`.
+
+=== Checking Current Status
+
+You can check the current manual health status via a GET request:
+
+[source,bash]
+----
+curl http://localhost:8080/actuator/health-manual
+----
+
+Response:
+[source,json]
+----
+{
+  "status": "UP"
+}
+----
+
+=== Changing Health Status
+
+To change the health status, send a POST request with the desired status:
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/actuator/health-manual \
+     -H "Content-Type: application/json" \
+     -d '{"status": "OUT_OF_SERVICE"}'
+----
+
+Supported statuses:
+* `UP`
+* `OUT_OF_SERVICE`
+* `DOWN`
+
+=== Impact on Main Health Endpoint
+
+When the manual status is set to something other than `UP`, the main `/actuator/health` endpoint will reflect this status (unless another indicator is already reporting a more severe status like `DOWN`).
+
+Example response from `/actuator/health` after setting manual status to `OUT_OF_SERVICE`:
+
+[source,json]
+----
+{
+  "status": "OUT_OF_SERVICE",
+  "components": {
+    "health-manual": {
+      "status": "OUT_OF_SERVICE",
+      "details": {
+        "manualOverride": "active",
+        "reason": "Graceful shutdown in progress",
+        "status": "OUT_OF_SERVICE"
+      }
+    }
+  }
+}
+----
