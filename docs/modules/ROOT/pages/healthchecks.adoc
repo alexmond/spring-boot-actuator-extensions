@@ -1,0 +1,89 @@
+= Spring Boot Actuator additional health checks
+Alex Mondshain <alex.mondshain@gmail.com>
+:revnumber: 1.0.5
+:example-caption!:
+:source-highlighter: highlight.js
+:keywords: Spring Boot, Actuator, Health Checks, Monitoring, TCP Health Check, HTTP Health Check
+:description: Additional health indicators for Spring Boot Actuator to monitor external services including HTTP endpoints, TCP ports, and remote Actuator endpoints
+:robots: index,follow
+
+== Overview
+
+Spring Boot Actuator Health Checks Starter provides additional health indicators for monitoring external services and dependencies:
+
+* Remote Spring Boot Actuator endpoints health check
+* HTTP endpoint availability check
+* TCP port availability check
+
+== Installation
+
+Add the following dependency to your `pom.xml`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-health-checks-starter</artifactId>
+    <version>{page-component-version}</version>
+</dependency>
+----
+
+== Configuration
+
+=== Actuator Health Check
+
+Monitors health of remote Spring Boot Actuator endpoints.
+
+[source,yaml]
+----
+management:
+  health:
+    actuator:
+      sites:
+        self:
+          url: http://localhost:8080/actuator/health
+          timeout: 10s
+          interval: 1m
+----
+
+=== HTTP Health Check 
+
+Checks availability of HTTP endpoints.
+
+[source,yaml]
+----
+management:
+  health:
+    http:
+      sites:
+        self:
+          url: http://localhost:8080/actuator/info
+          timeout: 10s
+          interval: 1m
+        self2:
+          url: http://localhost:8080/actuator/info
+          status: bad_request
+----
+
+=== Port Health Check
+
+Verifies if TCP ports are accessible.
+
+[source,yaml]
+----
+management:
+  health:
+    port:
+      sites:
+        database:
+          host: db.example.com
+          port: 5432
+          timeout: 10s
+          interval: 1m
+----
+
+== Configuration Properties
+
+Below you can find a list of configuration properties.
+
+include::partial$_hconfigprops.adoc[]
