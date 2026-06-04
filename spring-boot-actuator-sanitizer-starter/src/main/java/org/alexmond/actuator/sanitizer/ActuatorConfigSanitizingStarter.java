@@ -12,19 +12,9 @@ import org.springframework.context.annotation.Configuration;
  *
  * @since 1.0.0
  */
-@Configuration
-@EnableConfigurationProperties
+@Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(SanitizingProperties.class)
 public class ActuatorConfigSanitizingStarter {
-
-    /**
-     * Creates a default instance of SanitizingProperties.
-     *
-     * @return a new instance of SanitizingProperties with default settings
-     */
-    @Bean
-    public SanitizingProperties sanitizingProperties() {
-        return new SanitizingProperties();
-    }
 
     /**
      * Creates a customized sanitizing function using the provided properties.

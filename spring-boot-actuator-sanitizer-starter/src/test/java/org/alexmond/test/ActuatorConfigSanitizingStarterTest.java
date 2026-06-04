@@ -3,7 +3,7 @@ package org.alexmond.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.alexmond.actuator.sanitizer.ActuatorConfigSanitizingStarter;
+import org.alexmond.actuator.sanitizer.SanitizingProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,7 +25,7 @@ class ActuatorConfigSanitizingStarterTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ActuatorConfigSanitizingStarter actuatorConfigSanitizingStarter;
+    private SanitizingProperties sanitizingProperties;
 
     @Test
     void contextLoads() {
@@ -33,10 +33,7 @@ class ActuatorConfigSanitizingStarterTest {
 
     @Test
     void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        // Act
-        Object result = actuatorConfigSanitizingStarter.sanitizingProperties();
-        // Assert
-        assertNotNull(result);
+        assertNotNull(sanitizingProperties);
     }
 
     @ParameterizedTest
