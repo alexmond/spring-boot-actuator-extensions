@@ -1,3 +1,5 @@
+- **4.1.0.1**
+* Upgraded to Spring Boot 4.1.0 on the `main` line (no source changes required from 4.0). The 4.0.x line continues on the `4.0` branch.
 - **4.0.7.1**
 * Upgraded to Spring Boot 4.0.7 on the `main` line. Migrated to Jackson 3 (`tools.jackson`), the relocated health API (`org.springframework.boot.health.contributor`, now in the standalone `spring-boot-health` module), and the moved MockMvc test slice (`spring-boot-webmvc-test`).
 * Adopted a Boot-tracking version scheme: the project version is now `<spring-boot-version>.x` (e.g. `4.0.7.1`). The Spring Boot 3.5.x line continues on the `3.5` branch.

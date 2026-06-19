@@ -6,10 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A multi-module Maven project publishing Spring Boot Actuator extension starters to Maven Central
 (groupId `org.alexmond`). Each starter is an auto-configured library; the repo also ships a non-published
-sample app for manual verification. Java 17, Spring Boot 4.0.x (managed by the `spring-boot-starter-parent`)
-on `main`; the `3.5` branch is the Spring Boot 3.5.x maintenance line.
+sample app for manual verification. Java 17, Spring Boot 4.1.x (managed by the `spring-boot-starter-parent`)
+on `main`. Maintenance branches track older lines: `4.0` (Spring Boot 4.0.x) and `3.5` (Spring Boot 3.5.x).
+A new maintenance branch is cut from `main` only when the next **major** Spring Boot line arrives — minor bumps
+(like 4.0 → 4.1) just roll forward on `main`.
 
-Boot 4.0 notes (relevant when reading the code): the health API lives in `org.springframework.boot.health.contributor`
+Boot 4.x notes (relevant when reading the code): the health API lives in `org.springframework.boot.health.contributor`
 (`Health`, `HealthIndicator`, `Status`) from the standalone `spring-boot-health` module — declared explicitly in
 the health modules, since `spring-boot-actuator` does not pull it transitively. JSON uses Jackson 3 (`tools.jackson.*`;
 annotations stay under `com.fasterxml.jackson.annotation`). The MockMvc test slice (`@AutoConfigureMockMvc`) moved to
