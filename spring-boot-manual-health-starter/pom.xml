@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.alexmond</groupId>
         <artifactId>spring-boot-actuator-extensions-parent</artifactId>
-        <version>4.0.7.1</version>
+        <version>4.0.7.2-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-manual-health-starter</artifactId>
     <name>spring-boot-manual-health-starter</name>
