@@ -73,8 +73,14 @@ public class ExternalHttpHealthIndicatorEdgeCaseTest {
         assertEquals("DOWN", root.path("status").asText());
         JsonNode connTimeoutSite = root.path("components").path("externalHttp").path("details").path("conn-timeout");
         assertEquals("DOWN", connTimeoutSite.path("status").asText());
-        assertTrue(connTimeoutSite.path("details").path("error").asText().contains("Connect timed out")
-                || connTimeoutSite.path("details").path("error").asText().contains("timeout"));
+        // The unroutable IP may surface as a connect timeout, or—depending on the host's network
+        // stack—as an immediate "Network is unreachable" / "No route to host". Both are valid failures.
+        String error = connTimeoutSite.path("details").path("error").asText();
+        assertTrue(error.contains("Connect timed out")
+                        || error.contains("timeout")
+                        || error.contains("unreachable")
+                        || error.contains("No route to host"),
+                "Unexpected error message: " + error);
     }
 
     @Configuration

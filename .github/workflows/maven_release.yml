@@ -3,6 +3,10 @@ name: Maven Release
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'main'
       releaseVersion:
         description: 'Release version'
         required: true
@@ -17,6 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
 
       - name: Set up JDK
@@ -60,7 +65,7 @@ jobs:
           git commit -am "Prepare for next development iteration: ${{ github.event.inputs.nextVersion }}"
 
       - name: Push Changes
-        run: git push && git push --tags
+        run: git push origin ${{ github.event.inputs.branch }} && git push origin --tags
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
