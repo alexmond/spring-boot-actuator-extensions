@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
+import org.springframework.boot.health.contributor.Status;
 
 /**
  * Manual health endpoint for graceful shutdown and service state control.

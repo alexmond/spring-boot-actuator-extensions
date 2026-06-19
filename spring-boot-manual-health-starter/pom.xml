@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.alexmond</groupId>
         <artifactId>spring-boot-actuator-extensions-parent</artifactId>
-        <version>3.5.15.1-SNAPSHOT</version>
+        <version>4.0.7.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-manual-health-starter</artifactId>
     <name>spring-boot-manual-health-starter</name>
@@ -40,6 +40,10 @@
             <artifactId>spring-boot-actuator</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-health</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
         </dependency>
@@ -70,6 +74,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

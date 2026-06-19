@@ -1,6 +1,6 @@
 = Spring Boot Actuator Sanitizing Starter
 Alex Mondshain <alex.mondshain@gmail.com>
-:revnumber: 1.0.5
+:revnumber: 4.0.7.1
 :example-caption!:
 :source-highlighter: highlight.js
 :description: Spring Boot Actuator Sanitizing starter for masking sensitive information in actuator endpoints
@@ -15,7 +15,7 @@ It implements the `SanitizingFunction` interface (see the https://docs.spring.io
 
 == Features
 
-This starter supports Spring Boot 3.5+ and requires Java 17 or later.
+This starter supports Spring Boot 4.0+ (Spring Boot 3.5.x is maintained on the `3.5` branch) and requires Java 17 or later.
 
 The sanitizer provides flexible configuration options for masking sensitive data:
 

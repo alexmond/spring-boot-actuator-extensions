@@ -1,6 +1,6 @@
 = Spring Boot Actuator additional health checks
 Alex Mondshain <alex.mondshain@gmail.com>
-:revnumber: 1.0.5
+:revnumber: 4.0.7.1
 :example-caption!:
 :source-highlighter: highlight.js
 :keywords: Spring Boot, Actuator, Health Checks, Monitoring, TCP Health Check, HTTP Health Check

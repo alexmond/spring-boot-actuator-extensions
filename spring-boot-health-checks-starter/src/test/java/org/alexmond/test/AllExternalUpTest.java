@@ -1,8 +1,8 @@
 package org.alexmond.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.alexmond.healthchecks.port.HealthPortProperties;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class AllExternalUpTest {
 
     @Test
     @DirtiesContext
-    public void UPHealthCheckTest() throws JsonProcessingException{
+    public void UPHealthCheckTest() throws JacksonException{
         StringBuffer content = new StringBuffer();
 //        Thread.sleep(300000);
         RestTemplate restTemplate = new RestTemplate();

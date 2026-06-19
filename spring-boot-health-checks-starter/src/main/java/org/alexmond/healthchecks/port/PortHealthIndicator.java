@@ -3,7 +3,7 @@ package org.alexmond.healthchecks.port;
 import lombok.RequiredArgsConstructor;
 import org.alexmond.healthchecks.common.CommonHealthIndicator;
 import org.alexmond.healthchecks.common.CommonSite;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;

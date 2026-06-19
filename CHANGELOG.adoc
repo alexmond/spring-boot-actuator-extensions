@@ -1,3 +1,12 @@
+- **4.0.7.1**
+* Upgraded to Spring Boot 4.0.7 on the `main` line. Migrated to Jackson 3 (`tools.jackson`), the relocated health API (`org.springframework.boot.health.contributor`, now in the standalone `spring-boot-health` module), and the moved MockMvc test slice (`spring-boot-webmvc-test`).
+* Adopted a Boot-tracking version scheme: the project version is now `<spring-boot-version>.x` (e.g. `4.0.7.1`). The Spring Boot 3.5.x line continues on the `3.5` branch.
+- **3.5.15.1**
+* Upgraded Spring Boot to 3.5.15 (`3.5` maintenance line).
+* Bumped JaCoCo to 0.8.15 and `central-publishing-maven-plugin` to 0.11.0; removed an unused property.
+* Added a `branch` input to the release workflow so releases can be cut from any branch.
+* Hardened a flaky external HTTP health-check test for hosts where an unroutable IP fails fast instead of timing out.
+- **1.0.5** Upgraded Spring Boot to 3.5.14 and updated dependencies.
 - **1.0.4**
 * Upgraded Spring Boot to 3.5.10.
 * Refactored `ManualHealthEndpoint`: Unified status management into a single `@WriteOperation`, added `@ReadOperation`.

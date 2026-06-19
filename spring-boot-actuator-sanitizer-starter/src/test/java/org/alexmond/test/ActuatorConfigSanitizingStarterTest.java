@@ -1,14 +1,14 @@
 package org.alexmond.test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.alexmond.actuator.sanitizer.SanitizingProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -51,8 +51,10 @@ class ActuatorConfigSanitizingStarterTest {
         log.info("actuator content {}", content);
 
         JsonNode jsonNode = objectMapper.readTree(content.toString());
-        assertTrue(jsonNode.toString().contains(String.format("\"%s\":{\"value\":\"%s\"", node, value)));
-
+        // Assert structurally rather than on raw JSON: as of Spring Boot 4.0 the /env endpoint emits
+        // an "origin" field alongside "value", so a key-then-value substring match is no longer reliable.
+        JsonNode property = jsonNode.findValue(node);
+        assertEquals(value, property.path("value").asText());
     }
 
     @ParameterizedTest

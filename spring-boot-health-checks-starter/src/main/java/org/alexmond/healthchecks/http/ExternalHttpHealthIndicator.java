@@ -8,7 +8,7 @@ import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.util.Timeout;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;

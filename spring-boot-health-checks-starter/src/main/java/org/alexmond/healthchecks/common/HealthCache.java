@@ -2,7 +2,7 @@ package org.alexmond.healthchecks.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 
 /**

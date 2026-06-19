@@ -5,10 +5,10 @@
     <parent>
         <groupId>org.alexmond</groupId>
         <artifactId>spring-boot-actuator-extensions-parent</artifactId>
-        <version>3.5.15.1-SNAPSHOT</version>
+        <version>4.0.7.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-health-checks-starter</artifactId>
-    <version>3.5.15.1-SNAPSHOT</version>
+    <version>4.0.7.1-SNAPSHOT</version>
     <name>spring-boot-health-checks-starter</name>
     <properties>
         <java.version>17</java.version>
@@ -39,6 +39,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-health</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
