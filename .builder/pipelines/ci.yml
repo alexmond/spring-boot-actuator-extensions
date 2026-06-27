@@ -1,0 +1,19 @@
+name: Java CI with Maven
+
+# Analog of .github/workflows/maven.yml.
+# GitHub push/pull_request on main -> builder push + manual triggers.
+on: [push, manual]
+push:
+  branches: [main]
+
+jobs:
+  build:
+    image: maven:3.9-eclipse-temurin-21
+    cache:
+      key: m2-actuator-extensions
+      paths: [.m2/repository]
+    steps:
+      - name: Checkout
+        run: git clone --depth 1 https://github.com/alexmond/spring-boot-actuator-extensions.git .
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -Pdefault --no-transfer-progress -Dmaven.repo.local=.m2/repository
