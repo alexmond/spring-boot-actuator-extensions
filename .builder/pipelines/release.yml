@@ -3,6 +3,7 @@ name: Maven Release
 # Analog of .github/workflows/maven_release.yml (workflow_dispatch).
 # Maven Central deploy with version set/bump, tag, and push-back.
 on: [manual]
+checkout: true
 
 inputs:
   branch:
@@ -27,10 +28,9 @@ jobs:
       paths: [.m2/repository]
     secrets: [OSSRH_USERNAME, OSSRH_PASSWORD, GPG_PRIVATE_KEY, GPG_PASSPHRASE]
     steps:
-      - name: Checkout
-        run: git clone https://github.com/alexmond/spring-boot-actuator-extensions.git . && git checkout "$branch"
       - name: Configure Git
         run: |
+          git checkout "$branch"
           git config user.name "builder"
           git config user.email "actions@github.com"
           git config credential.helper store
