@@ -1,3 +1,5 @@
+= Actuator Extensions Changelog
+
 - **4.1.0.1**
 * Upgraded to Spring Boot 4.1.0 on the `main` line (no source changes required from 4.0). The 4.0.x line continues on the `4.0` branch.
 - **4.0.7.1**
