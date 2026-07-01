@@ -2,7 +2,7 @@
 :toc: left
 :sectnums:
 :keywords: Spring Boot, Actuator, Monitoring, Health Checks, Java
-:description: A collection of Spring Boot Actuator extensions providing enhanced monitoring and health check capabilities for Java applications
+:description: Spring Boot Actuator extensions — a configurable sensitive-value sanitizer plus extra health indicators (HTTP, port, manual) for production-grade observability.
 :author: Alex Mondshain
 :email: alex.mondshain@gmail.com
 :revnumber: 4.1.0.1
