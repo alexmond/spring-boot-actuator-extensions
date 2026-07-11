@@ -1,3 +1,12 @@
+- **3.5.16.1**
+* Upgraded Spring Boot to 3.5.16 (`3.5` maintenance line).
+- **3.5.15.1**
+* Upgraded Spring Boot to 3.5.15 (`3.5` maintenance line).
+* Bumped JaCoCo to 0.8.15 and `central-publishing-maven-plugin` to 0.11.0; removed an unused property.
+* Added a `branch` input to the release workflow so releases can be cut from any branch.
+* Hardened a flaky external HTTP health-check test for hosts where an unroutable IP fails fast instead of timing out.
+* Adopted a Boot-tracking version scheme: the project version is now `<spring-boot-version>.x` (e.g. `3.5.15.1`).
+- **1.0.5** Upgraded Spring Boot to 3.5.14 and updated dependencies.
 - **1.0.4**
 * Upgraded Spring Boot to 3.5.10.
 * Refactored `ManualHealthEndpoint`: Unified status management into a single `@WriteOperation`, added `@ReadOperation`.

@@ -5,7 +5,7 @@
 :description: A collection of Spring Boot Actuator extensions providing enhanced monitoring and health check capabilities for Java applications
 :author: Alex Mondshain
 :email: alex.mondshain@gmail.com
-:revnumber: 1.0.5
+:revnumber: 3.5.16.1
 :last-update-label: Last updated
 :last-update: 2026-01-31
 
@@ -38,7 +38,7 @@ Use this module as a reference for implementing the extensions in your own appli
 == Requirements
 
 * Java 17 or higher
-* Spring Boot 3.5.10
+* Spring Boot 3.5.16
 * Maven build tool
 
 == Changelog
