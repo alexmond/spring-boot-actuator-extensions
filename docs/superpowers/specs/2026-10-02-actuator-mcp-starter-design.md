@@ -23,7 +23,7 @@ Boot 3.5 is out of scope (end-of-life).
 | Topic | Decision |
 |---|---|
 | Boot lines | 4.1 (`main`) first, then ported to `4.0`. Not `3.5`. |
-| MCP library | Spring AI MCP server (`spring-ai-starter-mcp-server-webmvc`, 2.0.x). |
+| MCP library | Spring AI's MCP WebMVC transport (`org.springframework.ai:mcp-spring-webmvc`, 2.0.x) plus the MCP Java SDK. **Not** Spring AI's auto-configuring server starter — see "Refinement" below. |
 | MCP server | A **dedicated** MCP server for actuator tools. The app's own Spring AI MCP server, if any, is not touched. |
 | Port | The **management** port. Never the main application port when the two differ. |
 | Path | `/actuator/mcp` — `<management base path>/mcp`. |
@@ -55,6 +55,20 @@ A throwaway app was built and run on Boot 4.0.8 and 4.1.1 with Spring AI 2.0.1. 
 The probe used Spring AI's single auto-configured server. The dedicated server in this design is
 built from the same classes but is not yet proven; it is the first implementation step.
 
+## Refinement found while planning (2026-10-02)
+
+Spring AI's `McpServerAutoConfiguration` creates its server with `@ConditionalOnMissingBean` on the
+type `McpSyncServer`, and collects **every** `SyncToolSpecification` bean in the context. So:
+
+- The starter depends on `mcp-spring-webmvc` (the transport class only, no auto-configuration),
+  not on `spring-ai-starter-mcp-server-webmvc`. Adding the starter would start an empty Spring AI
+  server on the main port in every consumer app.
+- The dedicated server, its transport and its tool list are **not** registered as beans of the
+  MCP types. They live inside one holder bean, `ActuatorMcpServer`. This way an app that adds
+  Spring AI's server itself keeps it, with only its own tools.
+
+This resolves open risk 1 below.
+
 ## Architecture
 
 Package `org.alexmond.actuator.mcp`. Each unit has one job.
@@ -67,7 +81,9 @@ Package `org.alexmond.actuator.mcp`. Each unit has one job.
    - Built on Boot's `EndpointDiscoverer` infrastructure.
    - Endpoint filter: include/exclude from the properties.
    - Operation filter: Boot's `OperationFilter.byAccess(EndpointAccessResolver)`.
-   - Skips endpoints whose output cannot be sent as text (`heapdump`).
+   - Skips endpoints whose output cannot be sent as text (`heapdump`, `logfile`).
+   - Technology-specific endpoints (`@WebEndpoint`, `@JmxEndpoint`, for example `prometheus`) and
+     web extensions are not exposed; tools call the core `@Endpoint` operations.
 3. **`ActuatorToolFactory`** — turns one operation into one MCP tool specification.
    - Name: `actuator_<endpoint>` for a single read operation; `actuator_<endpoint>_<operation>`
      when an endpoint has several operations.
@@ -135,8 +151,9 @@ The actuator web endpoints do not need to be exposed for this to work.
 
 - New module added to the always-on `<modules>` list in the parent POM.
 - `spring-ai-bom` imported in the parent `dependencyManagement`, version in a property.
-- Module dependencies: `spring-boot-actuator-autoconfigure`,
-  `spring-ai-starter-mcp-server-webmvc`.
+- Module dependencies: `spring-boot-actuator-autoconfigure`, `spring-webmvc`,
+  `org.springframework.ai:mcp-spring-webmvc`, `io.modelcontextprotocol.sdk:mcp-json-jackson3`.
+  `spring-ai-starter-mcp-server-webmvc` is a **test** dependency only (coexistence test).
 - Java 17, Lombok, 4-space indentation, no formatter plugins — as the other starters.
 - Auto-configuration registered in `AutoConfiguration.imports`; the management configuration in
   `ManagementContextConfiguration.imports`.
@@ -180,10 +197,8 @@ manual check from Claude Code before release.
 
 ## Open risks
 
-1. **Dedicated server wiring.** Creating a second server next to Spring AI's auto-configured one
-   is unproven. If Spring AI's auto-configuration cannot coexist with it cleanly, fall back to the
-   probed approach: use the single server and move its route to the management port. That
-   fallback changes the "MCP server" decision above and needs a fresh decision.
+1. **Dedicated server wiring.** Resolved by the refinement above; still pinned by a full-context
+   test that runs with Spring AI's own server on the classpath.
 2. **Spring AI and future Boot bumps.** Each Boot patch or minor bump now also needs a compatible
    Spring AI release. The boot-upgrade survey must check this for both lines.
 3. **Path with a custom base path.** `/actuator/mcp` must follow
