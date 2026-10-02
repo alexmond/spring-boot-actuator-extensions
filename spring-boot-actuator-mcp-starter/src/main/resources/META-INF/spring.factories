@@ -1,0 +1,2 @@
+org.springframework.boot.actuate.autoconfigure.endpoint.condition.EndpointExposureOutcomeContributor=\
+org.alexmond.actuator.mcp.McpEndpointExposureOutcomeContributor

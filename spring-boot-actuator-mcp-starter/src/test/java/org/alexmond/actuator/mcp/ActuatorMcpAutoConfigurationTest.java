@@ -48,4 +48,19 @@ class ActuatorMcpAutoConfigurationTest {
                 .withConfiguration(AutoConfigurations.of(ActuatorMcpAutoConfiguration.class))
                 .run(context -> assertThat(context).doesNotHaveBean(McpEndpointProperties.class));
     }
+
+    @Test
+    void computesMcpPath() {
+        assertThat(ActuatorMcpAutoConfiguration.mcpPath("/actuator")).isEqualTo("/actuator/mcp");
+        assertThat(ActuatorMcpAutoConfiguration.mcpPath("/manage/")).isEqualTo("/manage/mcp");
+        assertThat(ActuatorMcpAutoConfiguration.mcpPath("/")).isEqualTo("/mcp");
+        assertThat(ActuatorMcpAutoConfiguration.mcpPath("")).isEqualTo("/mcp");
+    }
+
+    @Test
+    void createsServerWithNoToolsByDefault() {
+        runner.withConfiguration(AutoConfigurations.of(
+                        org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfiguration.class))
+                .run(context -> assertThat(context.getBean(ActuatorMcpServer.class).getToolNames()).isEmpty());
+    }
 }
