@@ -63,6 +63,34 @@ final class TestEndpoints {
         }
     }
 
+    /**
+     * Kept out of {@link Config} so the other discovery tests' expectations stay unchanged.
+     */
+    @Configuration(proxyBeanMethods = false)
+    static class PairConfig {
+
+        @Bean
+        PairEndpoint pairEndpoint() {
+            return new PairEndpoint();
+        }
+    }
+
+    @Endpoint(id = "pair")
+    static class PairEndpoint {
+
+        private String value = "initial";
+
+        @ReadOperation
+        public String get() {
+            return value;
+        }
+
+        @WriteOperation
+        public void set(String value) {
+            this.value = value;
+        }
+    }
+
     @Endpoint(id = "alpha")
     static class AlphaEndpoint {
 

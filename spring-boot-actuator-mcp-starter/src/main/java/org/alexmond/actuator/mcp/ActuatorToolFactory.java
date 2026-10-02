@@ -2,6 +2,7 @@ package org.alexmond.actuator.mcp;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -15,7 +16,13 @@ import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.endpoint.InvocationContext;
 import org.springframework.boot.actuate.endpoint.SecurityContext;
+import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.invoke.OperationParameter;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -58,11 +65,23 @@ public class ActuatorToolFactory {
     }
 
     /**
-     * {@code actuator_<id>} for an endpoint with one operation, else {@code actuator_<id>_<operation>}.
+     * {@code actuator_<id>} for an endpoint that declares one operation, else
+     * {@code actuator_<id>_<operation>}. Counts the operations the endpoint type declares, not the ones
+     * left after access filtering, so tightening access never renames a tool.
      */
     static String toolName(McpEndpoint endpoint, McpOperation operation) {
         String base = "actuator_" + endpoint.getEndpointId().toLowerCaseString();
-        return endpoint.getOperations().size() == 1 ? base : base + "_" + operation.getName();
+        long declared = Math.max(declaredOperationCount(endpoint), endpoint.getOperations().size());
+        return declared == 1 ? base : base + "_" + operation.getName();
+    }
+
+    private static long declaredOperationCount(McpEndpoint endpoint) {
+        Class<?> type = ClassUtils.getUserClass(endpoint.getEndpointBean());
+        return Arrays.stream(ReflectionUtils.getUniqueDeclaredMethods(type))
+                .filter(method -> AnnotatedElementUtils.hasAnnotation(method, ReadOperation.class)
+                        || AnnotatedElementUtils.hasAnnotation(method, WriteOperation.class)
+                        || AnnotatedElementUtils.hasAnnotation(method, DeleteOperation.class))
+                .count();
     }
 
     static McpSchema.JsonSchema inputSchema(McpOperation operation) {

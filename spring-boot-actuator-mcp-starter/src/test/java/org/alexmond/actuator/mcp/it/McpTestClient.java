@@ -39,13 +39,21 @@ final class McpTestClient implements AutoCloseable {
 
     /** Raw initialize POST, to check that a port does or does not serve MCP. */
     static int initializeStatus(int port, String path) throws Exception {
+        return initializeStatus(port, path, null);
+    }
+
+    /** Raw initialize POST with an optional Origin header, as a browser would send it. */
+    static int initializeStatus(int port, String path, String origin) throws Exception {
         String body = "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":"
                 + "\"2025-06-18\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"0\"}}}";
-        HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path))
+        HttpRequest.Builder request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json, text/event-stream")
-                .POST(HttpRequest.BodyPublishers.ofString(body)).build();
-        return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).statusCode();
+                .POST(HttpRequest.BodyPublishers.ofString(body));
+        if (origin != null) {
+            request.header("Origin", origin);
+        }
+        return HttpClient.newHttpClient().send(request.build(), HttpResponse.BodyHandlers.ofString()).statusCode();
     }
 
     @Override

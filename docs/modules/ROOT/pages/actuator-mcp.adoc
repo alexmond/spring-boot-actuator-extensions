@@ -69,10 +69,16 @@ Nothing, until you include endpoints:
 |`management.endpoints.mcp.max-response-chars`
 |`20000`
 |Longer tool results are truncated, with a note telling the assistant how to narrow the call.
+
+|`management.endpoints.mcp.allowed-origins`
+|_(empty)_
+|Browser origins allowed to call the endpoint, e.g. `http://localhost:6274`; `:*` matches any port.
+See <<origins>>.
 |===
 
-Each operation of an included endpoint becomes one tool, named `actuator_<endpoint>` (single
-operation) or `actuator_<endpoint>_<operation>`, for example `actuator_metrics_metric`.
+Each operation of an included endpoint becomes one tool, named `actuator_<endpoint>` (endpoint
+declares one operation) or `actuator_<endpoint>_<operation>`, for example `actuator_metrics_metric`.
+Names depend only on the endpoint type, so changing access settings never renames a tool.
 
 `heapdump` and `logfile` are never exposed (binary or file output). Web-only endpoints such as
 `prometheus` are not exposed.
@@ -108,12 +114,39 @@ SecurityFilterChain management(HttpSecurity http) throws Exception {
     return http.securityMatcher("/actuator/**")
             .authorizeHttpRequests(a -> a.anyRequest().hasRole("OPS"))
             .httpBasic(Customizer.withDefaults())
+            // every MCP call is a POST: without this, CSRF protection rejects them all with 403
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/actuator/mcp"))
             .build();
 }
 ----
 
 `EndpointRequest.toAnyEndpoint()` does not match `/actuator/mcp`, because MCP is not an actuator
 endpoint id — match the path, as above.
+
+[[origins]]
+== Browser origins (DNS rebinding)
+
+A web page can trick a browser into calling a server on `localhost` (DNS rebinding). As the MCP
+specification requires, the endpoint checks the `Origin` header:
+
+* No `Origin` header — CLI clients such as Claude Code — is always accepted.
+* An `Origin` header must match `management.endpoints.mcp.allowed-origins`, otherwise the request
+  is rejected with `403`. The list is empty by default, so every browser request is refused.
+
+To use a browser-based client such as the MCP Inspector, allow its origin:
+
+[source,yaml]
+----
+management:
+  endpoints:
+    mcp:
+      allowed-origins: http://localhost:6274
+----
+
+== Shutdown
+
+Connected MCP clients keep a stream open. The starter closes all MCP sessions before the web
+server's graceful shutdown begins, so restarts are not delayed by connected assistants.
 
 == Using it with Spring AI's MCP server
 
