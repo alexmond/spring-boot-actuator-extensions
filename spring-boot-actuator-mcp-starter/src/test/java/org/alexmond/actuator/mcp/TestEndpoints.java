@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.actuate.autoconfigure.endpoint.PropertiesEndpointAccessResolver;
 import org.springframework.boot.actuate.autoconfigure.endpoint.expose.IncludeExcludeEndpointFilter;
 import org.springframework.boot.actuate.endpoint.Access;
@@ -92,7 +93,7 @@ final class TestEndpoints {
     static class DashEndpoint {
 
         @ReadOperation
-        public Map<String, Object> status(Integer limit, Boolean verbose) {
+        public Map<String, Object> status(@Nullable Integer limit, @Nullable Boolean verbose) {
             return Map.of("limit", limit == null ? 0 : limit, "verbose", verbose != null && verbose);
         }
     }
@@ -107,7 +108,7 @@ final class TestEndpoints {
 
         @ReadOperation
         public Object empty() {
-            return new Object();
+            return new Unreadable();
         }
 
         @ReadOperation
@@ -118,6 +119,16 @@ final class TestEndpoints {
         @ReadOperation
         public String big(@Selector int size, @Selector String fill) {
             return fill.repeat(size);
+        }
+    }
+
+    /**
+     * Jackson 3 serialises empty beans as {}; a throwing getter is what makes serialisation fail.
+     */
+    public static class Unreadable {
+
+        public String getValue() {
+            throw new IllegalStateException("cannot read value");
         }
     }
 
