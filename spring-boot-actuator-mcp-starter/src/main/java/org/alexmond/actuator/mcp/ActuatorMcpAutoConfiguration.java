@@ -64,7 +64,8 @@ public class ActuatorMcpAutoConfiguration {
         ActuatorToolFactory factory = new ActuatorToolFactory(mapper,
                 new ResponseLimiter(properties.getMaxResponseChars()));
         String basePath = environment.getProperty("management.endpoints.web.base-path", "/actuator");
-        return new ActuatorMcpServer(mcpPath(basePath), factory.createTools(discoverer.getEndpoints()));
+        return new ActuatorMcpServer(mcpPath(basePath), factory.createTools(discoverer.getEndpoints()),
+                properties.getAllowedOrigins());
     }
 
     static String mcpPath(String basePath) {

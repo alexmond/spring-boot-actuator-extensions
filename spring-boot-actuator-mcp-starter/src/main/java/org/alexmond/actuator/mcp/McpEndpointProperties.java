@@ -1,6 +1,8 @@
 package org.alexmond.actuator.mcp;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
@@ -26,6 +28,13 @@ public class McpEndpointProperties {
      * Maximum number of characters returned by one tool call; longer results are truncated.
      */
     private int maxResponseChars = 20000;
+
+    /**
+     * Browser origins allowed to call the MCP endpoint, e.g. http://localhost:6274 or http://localhost:*.
+     * Requests without an Origin header (CLI MCP clients) are always accepted; requests from any other
+     * origin are rejected with 403, which blocks DNS-rebinding attacks from web pages.
+     */
+    private List<String> allowedOrigins = new ArrayList<>();
 
     @Getter
     @Setter

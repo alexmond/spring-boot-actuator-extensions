@@ -8,6 +8,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -52,6 +53,21 @@ class ActuatorToolFactoryTest {
                     "actuator_alpha_read", "actuator_alpha_readOne", "actuator_alpha_reset",
                     "actuator_alpha_write", "actuator_dash-id");
         });
+    }
+
+    @Test
+    void toolNamesDoNotChangeWhenAccessIsTightened() {
+        var pairRunner = new ApplicationContextRunner()
+                .withInitializer(context -> context.getEnvironment()
+                        .setConversionService(new ApplicationConversionService()))
+                .withUserConfiguration(TestEndpoints.PairConfig.class);
+        pairRunner.run(context -> assertThat(factory.createTools(
+                        TestEndpoints.discover(context, List.of("pair"), List.of()).getEndpoints()))
+                .extracting(t -> t.tool().name()).containsExactly("actuator_pair_get", "actuator_pair_set"));
+        pairRunner.withPropertyValues("management.endpoint.pair.access=read-only")
+                .run(context -> assertThat(factory.createTools(
+                                TestEndpoints.discover(context, List.of("pair"), List.of()).getEndpoints()))
+                        .extracting(t -> t.tool().name()).containsExactly("actuator_pair_get"));
     }
 
     @Test

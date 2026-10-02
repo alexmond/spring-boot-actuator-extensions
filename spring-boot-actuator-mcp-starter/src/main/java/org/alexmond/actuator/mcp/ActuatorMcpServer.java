@@ -1,12 +1,14 @@
 package org.alexmond.actuator.mcp;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.transport.DefaultServerTransportSecurityValidator;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.springframework.ai.mcp.server.webmvc.transport.WebMvcStreamableServerTransportProvider;
 import org.springframework.beans.factory.DisposableBean;
@@ -30,12 +32,21 @@ public class ActuatorMcpServer implements DisposableBean {
 
     private final McpSyncServer server;
 
-    public ActuatorMcpServer(String endpointPath, List<SyncToolSpecification> tools) {
+    private final AtomicBoolean closed = new AtomicBoolean();
+
+    /**
+     * @param allowedOrigins browser origins accepted in an Origin header; requests without one are always
+     * accepted, any other origin gets 403 (DNS-rebinding protection required by the MCP spec)
+     */
+    public ActuatorMcpServer(String endpointPath, List<SyncToolSpecification> tools, List<String> allowedOrigins) {
         this.endpointPath = endpointPath;
         McpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
         this.transport = WebMvcStreamableServerTransportProvider.builder()
                 .jsonMapper(jsonMapper)
                 .mcpEndpoint(endpointPath)
+                .securityValidator(DefaultServerTransportSecurityValidator.builder()
+                        .allowedOrigins(allowedOrigins)
+                        .build())
                 .build();
         String version = ActuatorMcpServer.class.getPackage().getImplementationVersion();
         this.server = McpServer.sync(transport)
@@ -58,8 +69,21 @@ public class ActuatorMcpServer implements DisposableBean {
         return transport.getRouterFunction();
     }
 
+    /**
+     * Closes all client sessions, ending their open streams. Safe to call more than once.
+     */
+    public void close() {
+        if (closed.compareAndSet(false, true)) {
+            server.closeGracefully();
+        }
+    }
+
+    public boolean isClosed() {
+        return closed.get();
+    }
+
     @Override
     public void destroy() {
-        server.closeGracefully();
+        close();
     }
 }

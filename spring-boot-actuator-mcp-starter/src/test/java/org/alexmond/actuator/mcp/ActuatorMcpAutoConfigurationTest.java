@@ -50,6 +50,15 @@ class ActuatorMcpAutoConfigurationTest {
     }
 
     @Test
+    void allowedOriginsAreEmptyByDefaultAndBindable() {
+        runner.run(context -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins())
+                .isEmpty());
+        runner.withPropertyValues("management.endpoints.mcp.allowed-origins=http://localhost:6274,http://127.0.0.1:*")
+                .run(context -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins())
+                        .containsExactly("http://localhost:6274", "http://127.0.0.1:*"));
+    }
+
+    @Test
     void computesMcpPath() {
         assertThat(ActuatorMcpAutoConfiguration.mcpPath("/actuator")).isEqualTo("/actuator/mcp");
         assertThat(ActuatorMcpAutoConfiguration.mcpPath("/manage/")).isEqualTo("/manage/mcp");
