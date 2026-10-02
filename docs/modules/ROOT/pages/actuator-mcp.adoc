@@ -1,5 +1,5 @@
 = Actuator MCP Server
-:revnumber: 4.1.1.2
+:revnumber: 4.0.8.2
 :toc: left
 
 Expose Spring Boot Actuator endpoints to AI assistants (Claude Code, Cursor and other MCP clients)
