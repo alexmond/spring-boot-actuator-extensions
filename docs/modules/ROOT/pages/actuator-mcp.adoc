@@ -1,0 +1,129 @@
+= Actuator MCP Server
+:revnumber: 4.1.1.2
+:toc: left
+
+Expose Spring Boot Actuator endpoints to AI assistants (Claude Code, Cursor and other MCP clients)
+as https://modelcontextprotocol.io/[Model Context Protocol] tools — served from inside your
+application, on the management port.
+
+== Installation
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.alexmond</groupId>
+    <artifactId>spring-boot-actuator-mcp-starter</artifactId>
+    <version>{page-component-version}</version>
+</dependency>
+----
+
+Requires a Spring MVC (servlet) application with `spring-boot-starter-actuator`.
+
+== Quick start
+
+[source,yaml]
+----
+management:
+  server:
+    port: 9090            # recommended: keep MCP off the public port
+  endpoints:
+    mcp:
+      exposure:
+        include: health,info,metrics,loggers
+----
+
+Connect a client:
+
+[source,bash]
+----
+claude mcp add --transport http my-app http://localhost:9090/actuator/mcp
+----
+
+== Where it is served
+
+* Path: `<management.endpoints.web.base-path>/mcp` — `/actuator/mcp` by default.
+* With `management.server.port` set, MCP is served **only** on the management port.
+* Without a separate management port, it is served on the application port, like every other actuator endpoint.
+* Transport: Streamable HTTP.
+
+== What is exposed
+
+Nothing, until you include endpoints:
+
+[cols="1,1,3"]
+|===
+|Property |Default |Description
+
+|`management.endpoints.mcp.enabled`
+|`true`
+|Turn the actuator MCP server off completely.
+
+|`management.endpoints.mcp.exposure.include`
+|_(empty)_
+|Endpoint IDs to expose, or `*`.
+
+|`management.endpoints.mcp.exposure.exclude`
+|_(empty)_
+|Endpoint IDs never to expose. Wins over `include`.
+
+|`management.endpoints.mcp.max-response-chars`
+|`20000`
+|Longer tool results are truncated, with a note telling the assistant how to narrow the call.
+|===
+
+Each operation of an included endpoint becomes one tool, named `actuator_<endpoint>` (single
+operation) or `actuator_<endpoint>_<operation>`, for example `actuator_metrics_metric`.
+
+`heapdump` and `logfile` are never exposed (binary or file output). Web-only endpoints such as
+`prometheus` are not exposed.
+
+== Write operations follow actuator access
+
+The starter has no separate read-only switch: it respects actuator's own access settings.
+
+* `management.endpoint.<id>.access=read-only` → only read tools for that endpoint.
+* `management.endpoint.<id>.access=none` → no tools for that endpoint.
+* `management.endpoints.access.max-permitted=read-only` → read-only for every endpoint, everywhere.
+
+IMPORTANT: Actuator's default access is `unrestricted`. Including `loggers` therefore also exposes
+`actuator_loggers_configureLogLevel`, which changes log levels. Set `access=read-only` on endpoints
+an assistant should only read. `shutdown` stays unavailable unless you enable it in actuator itself.
+
+== Sensitive values
+
+Tools call the endpoints in-process, so actuator's own masking applies: `show-values` /
+`show-details` settings and every `SanitizingFunction` bean, including the
+xref:sanitizer.adoc[Actuator Sanitizer] when it is on the classpath. Tool calls run without a
+user principal, so `when-authorized` settings keep values hidden.
+
+== Securing the endpoint
+
+The starter adds no authentication. Protect the MCP path with Spring Security like any actuator
+endpoint, for example:
+
+[source,java]
+----
+@Bean
+SecurityFilterChain management(HttpSecurity http) throws Exception {
+    return http.securityMatcher("/actuator/**")
+            .authorizeHttpRequests(a -> a.anyRequest().hasRole("OPS"))
+            .httpBasic(Customizer.withDefaults())
+            .build();
+}
+----
+
+`EndpointRequest.toAnyEndpoint()` does not match `/actuator/mcp`, because MCP is not an actuator
+endpoint id — match the path, as above.
+
+== Using it with Spring AI's MCP server
+
+If your application also runs Spring AI's MCP server for its own tools, both servers work side by
+side: your tools stay on your server, and the actuator tools are only on `/actuator/mcp`.
+(Spring AI collects your tools from beans of type `List<SyncToolSpecification>`; the actuator tools
+are never registered as beans, so they cannot leak into your server.)
+
+== Custom endpoints
+
+Your own `@Endpoint` beans are exposed like the built-in ones once included. Each operation
+parameter becomes a tool argument. Parameters are required unless annotated with JSpecify's
+`@org.jspecify.annotations.Nullable`, which marks them optional in the tool's input schema.
