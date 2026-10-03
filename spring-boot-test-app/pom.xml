@@ -32,6 +32,11 @@
     </scm>
     <dependencies>
         <dependency>
+            <groupId>org.alexmond</groupId>
+            <artifactId>spring-boot-actuator-mcp-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
