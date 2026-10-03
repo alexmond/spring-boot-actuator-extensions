@@ -30,6 +30,11 @@ Provides a manual health endpoint to control application health status for grace
 Utility library designed to sanitize sensitive information in actuator endpoint responses.
 This module helps ensure secure exposure of monitoring data by filtering out confidential details.
 
+=== spring-boot-actuator-mcp-starter
+
+Exposes actuator endpoints to AI assistants as MCP (Model Context Protocol) tools, served on the management port.
+See xref:actuator-mcp.adoc[Actuator MCP Server].
+
 === spring-boot-test-app
 
 Sample Spring Boot application that demonstrates the practical usage of the actuator extensions.

@@ -1,3 +1,5 @@
+- **4.0.8.2**
+* New `spring-boot-actuator-mcp-starter`: exposes included actuator endpoints as MCP tools on a dedicated MCP server at `/actuator/mcp` on the management port. Respects actuator access settings and sanitizing; nothing exposed by default.
 - **4.0.8.1**
 * Upgraded to Spring Boot 4.0.8 on the `4.0` maintenance line (patch bump, no source changes required).
 - **4.0.7.1**

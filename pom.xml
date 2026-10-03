@@ -23,6 +23,9 @@
         <jacoco.agent.arg>
             -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco-maven-plugin.version}/org.jacoco.agent-${jacoco-maven-plugin.version}-runtime.jar=destfile=target/jacoco.exec
         </jacoco.agent.arg>
+
+        <spring-ai.version>2.0.1</spring-ai.version>
+        <mcp-sdk.version>2.0.0</mcp-sdk.version>
     </properties>
     <url>https://www.alexmond.org/extensions/current/index.html</url>
     <description>Spring boot actuator extensions parent</description>
@@ -56,6 +59,24 @@
     <!--            <url>https://maven.pkg.github.com/${github.repository}</url>-->
     <!--        </repository>-->
     <!--    </distributionManagement>-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.modelcontextprotocol.sdk</groupId>
+                <artifactId>mcp-bom</artifactId>
+                <version>${mcp-sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <pluginManagement>
             <plugins>
@@ -207,6 +228,7 @@
         <module>spring-boot-health-checks-starter</module>
         <module>spring-boot-actuator-sanitizer-starter</module>
         <module>spring-boot-manual-health-starter</module>
+        <module>spring-boot-actuator-mcp-starter</module>
     </modules>
     <profiles>
         <profile>

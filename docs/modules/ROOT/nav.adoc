@@ -2,4 +2,5 @@
 * xref:sanitizer.adoc[Actuator Sanitizer]
 * xref:healthchecks.adoc[Actuator extra health checks]
 * xref:manual-health.adoc[Manual Health Control]
+* xref:actuator-mcp.adoc[Actuator MCP Server]
 * xref:CHANGELOG.adoc[Changelog]
