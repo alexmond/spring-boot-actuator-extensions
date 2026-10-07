@@ -132,9 +132,25 @@ Two patterns, both worth knowing before adding tests:
 
 This repo is one of several near-identical `org.alexmond` Spring Boot starter libraries. The starter pattern,
 the 80% JaCoCo gate, and the `default`-profile sample-app split are shared across them — but do **not**
-assume the rest match. Unlike siblings such as `spring-boot-config-json-schema` and `notify4j`, this repo has:
-**no `./mvnw` wrapper**, **no spring-javaformat / Checkstyle / PMD quality plugins**, and uses
-**4-space indentation (not tabs)**. Don't run `spring-javaformat:apply` or hand-format to tabs here.
+assume the rest match. Unlike siblings such as `spring-boot-config-json-schema` and `notify4j`, this repo has
+**no `./mvnw` wrapper**.
+
+### Code style and quality gates
+
+The repo uses the shared formatter and linters, on every module including the sample app:
+
+- **spring-javaformat** (`validate` phase) — Spring code style, **tabs** for indentation. It fails the build
+  on unformatted code. Run `mvn -Pdefault spring-javaformat:apply` before committing.
+- **Checkstyle** (`validate` phase) — `checkstyle.xml` (Spring checks) with `checkstyle-suppressions.xml`.
+  Covers main and test sources.
+- **PMD** (`process-classes` phase, so type-resolution rules see compiled classes) — `pmd-ruleset.xml`.
+  Main sources only.
+
+Fix a violation in the code. Suppress only when a rule would force an API or behaviour change, and keep the
+suppression narrow (`@SuppressWarnings("PMD.Rule")` with a reason, or one line in the suppressions file).
+The formatter changes line counts, and the JaCoCo gate counts lines — re-check coverage after a large reformat.
+`.editorconfig` carries the indentation rules for editors. `.git-blame-ignore-revs` lists the mechanical
+reformat commit — use `git blame --ignore-revs-file .git-blame-ignore-revs`.
 
 ## Documentation
 
