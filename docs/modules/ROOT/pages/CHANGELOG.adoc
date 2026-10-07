@@ -1,3 +1,6 @@
+- **3.5.16.2**
+* The starters now ship `spring-configuration-metadata.json`, so IDEs complete and document their `management.*` properties. Earlier releases were built without it.
+* The build is now checked on JDK 17, 21 and 25.
 - **3.5.16.1**
 * Upgraded Spring Boot to 3.5.16 (`3.5` maintenance line).
 - **3.5.15.1**
