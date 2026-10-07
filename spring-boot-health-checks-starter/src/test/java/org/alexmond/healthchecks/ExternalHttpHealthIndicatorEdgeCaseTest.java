@@ -20,77 +20,76 @@ import java.net.http.HttpResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ExternalHttpHealthIndicatorEdgeCaseTest.TestConfig.class)
-@TestPropertySource(properties = {
-        "management.health.http.sites.slow.url=http://127.0.0.1:0/slow",
-        "management.health.http.sites.slow.timeout=1s",
-        "management.health.http.sites.slow.interval=0s",
-        "management.health.http.sites.conn-timeout.url=http://10.255.255.1",
-        "management.health.http.sites.conn-timeout.timeout=1s",
-        "management.health.http.sites.conn-timeout.interval=0s",
-        "management.endpoint.health.show-details=always"
-})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		classes = ExternalHttpHealthIndicatorEdgeCaseTest.TestConfig.class)
+@TestPropertySource(properties = { "management.health.http.sites.slow.url=http://127.0.0.1:0/slow",
+		"management.health.http.sites.slow.timeout=1s", "management.health.http.sites.slow.interval=0s",
+		"management.health.http.sites.conn-timeout.url=http://10.255.255.1",
+		"management.health.http.sites.conn-timeout.timeout=1s", "management.health.http.sites.conn-timeout.interval=0s",
+		"management.endpoint.health.show-details=always" })
 public class ExternalHttpHealthIndicatorEdgeCaseTest {
 
-    @LocalServerPort
-    private int port;
+	@LocalServerPort
+	private int port;
 
-    @Autowired
-    private org.alexmond.healthchecks.http.HealthHttpProperties healthHttpProperties;
+	@Autowired
+	private org.alexmond.healthchecks.http.HealthHttpProperties healthHttpProperties;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void testReadTimeoutHttp() throws Exception {
-        healthHttpProperties.getSites().get("slow").setUrl("http://127.0.0.1:" + port + "/slow");
+	@Test
+	void testReadTimeoutHttp() throws Exception {
+		healthHttpProperties.getSites().get("slow").setUrl("http://127.0.0.1:" + port + "/slow");
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
-                .build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
+			.build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JsonNode root = objectMapper.readTree(response.body());
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		JsonNode root = objectMapper.readTree(response.body());
 
-        assertEquals("DOWN", root.path("status").asText());
-        JsonNode slowSite = root.path("components").path("externalHttp").path("details").path("slow");
-        assertEquals("DOWN", slowSite.path("status").asText());
-        assertTrue(slowSite.path("details").path("error").asText().contains("Read timed out") 
-                || slowSite.path("details").path("error").asText().contains("timeout"));
-    }
+		assertEquals("DOWN", root.path("status").asText());
+		JsonNode slowSite = root.path("components").path("externalHttp").path("details").path("slow");
+		assertEquals("DOWN", slowSite.path("status").asText());
+		assertTrue(slowSite.path("details").path("error").asText().contains("Read timed out")
+				|| slowSite.path("details").path("error").asText().contains("timeout"));
+	}
 
-    @Test
-    void testConnectionTimeoutHttp() throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
-                .build();
+	@Test
+	void testConnectionTimeoutHttp() throws Exception {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
+			.build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JsonNode root = objectMapper.readTree(response.body());
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		JsonNode root = objectMapper.readTree(response.body());
 
-        assertEquals("DOWN", root.path("status").asText());
-        JsonNode connTimeoutSite = root.path("components").path("externalHttp").path("details").path("conn-timeout");
-        assertEquals("DOWN", connTimeoutSite.path("status").asText());
-        // The unroutable IP may surface as a connect timeout, or—depending on the host's network
-        // stack—as an immediate "Network is unreachable" / "No route to host". Both are valid failures.
-        String error = connTimeoutSite.path("details").path("error").asText();
-        assertTrue(error.contains("Connect timed out")
-                        || error.contains("timeout")
-                        || error.contains("unreachable")
-                        || error.contains("No route to host"),
-                "Unexpected error message: " + error);
-    }
+		assertEquals("DOWN", root.path("status").asText());
+		JsonNode connTimeoutSite = root.path("components").path("externalHttp").path("details").path("conn-timeout");
+		assertEquals("DOWN", connTimeoutSite.path("status").asText());
+		// The unroutable IP may surface as a connect timeout, or—depending on the host's
+		// network
+		// stack—as an immediate "Network is unreachable" / "No route to host". Both are
+		// valid failures.
+		String error = connTimeoutSite.path("details").path("error").asText();
+		assertTrue(error.contains("Connect timed out") || error.contains("timeout") || error.contains("unreachable")
+				|| error.contains("No route to host"), "Unexpected error message: " + error);
+	}
 
-    @Configuration
-    @EnableAutoConfiguration
-    @RestController
-    static class TestConfig {
-        @GetMapping("/slow")
-        public String slow() throws InterruptedException {
-            Thread.sleep(2000);
-            return "OK";
-        }
-    }
+	@Configuration
+	@EnableAutoConfiguration
+	@RestController
+	static class TestConfig {
+
+		@GetMapping("/slow")
+		public String slow() throws InterruptedException {
+			Thread.sleep(2000);
+			return "OK";
+		}
+
+	}
+
 }

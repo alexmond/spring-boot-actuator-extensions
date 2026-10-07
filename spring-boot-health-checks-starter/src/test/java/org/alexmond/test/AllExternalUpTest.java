@@ -21,36 +21,36 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext
 class AllExternalUpTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    HealthPortProperties healthPortProperties;
+	@Autowired
+	HealthPortProperties healthPortProperties;
 
+	@Test
+	void contextLoads() {
+	}
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
+		// Act
+		Object result = healthPortProperties.getSites();
+		// Assert
+		assertNotNull(result);
+	}
 
-    @Test
-    void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        // Act
-        Object result = healthPortProperties.getSites();
-        // Assert
-        assertNotNull(result);
-    }
+	@Test
+	@DirtiesContext
+	public void UPHealthCheckTest() throws JacksonException {
+		StringBuffer content = new StringBuffer();
+		// Thread.sleep(300000);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9082/actuator/health",
+				String.class);
+		content.append(response.getBody());
+		log.info("actuator content {}", content);
+		JsonNode jsonNode = objectMapper.readTree(content.toString());
+		assertTrue(jsonNode.has("status"));
+		assertEquals("UP", jsonNode.get("status").asText());
+	}
 
-
-    @Test
-    @DirtiesContext
-    public void UPHealthCheckTest() throws JacksonException{
-        StringBuffer content = new StringBuffer();
-//        Thread.sleep(300000);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9082/actuator/health", String.class);
-        content.append(response.getBody());
-        log.info("actuator content {}", content);
-        JsonNode jsonNode = objectMapper.readTree(content.toString());
-        assertTrue(jsonNode.has("status"));
-        assertEquals("UP", jsonNode.get("status").asText());
-    }
 }

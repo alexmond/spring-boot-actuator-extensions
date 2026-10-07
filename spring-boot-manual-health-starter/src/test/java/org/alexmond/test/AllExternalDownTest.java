@@ -22,28 +22,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext
 class AllExternalDownTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
+	@Test
+	@DirtiesContext
+	public void UPHealthCheckTest() throws IOException, InterruptedException {
+		StringBuffer content = new StringBuffer();
+		HttpClient httpClient = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://localhost:9082/actuator/health"))
+			.GET()
+			.build();
+		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+		content.append(response.body());
+		log.info("actuator content {}", content);
+		JsonNode jsonNode = objectMapper.readTree(content.toString());
 
-    @Test
-    @DirtiesContext
-    public void UPHealthCheckTest() throws IOException, InterruptedException {
-        StringBuffer content = new StringBuffer();
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9082/actuator/health"))
-                .GET()
-                .build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        content.append(response.body());
-        log.info("actuator content {}", content);
-        JsonNode jsonNode = objectMapper.readTree(content.toString());
+		// Assert main status is DOWN because we HAVE health-checks-starter in test scope
+		// now
+		assertEquals("DOWN", jsonNode.at("/status").asText());
+	}
 
-        // Assert main status is DOWN because we HAVE health-checks-starter in test scope now
-        assertEquals("DOWN", jsonNode.at("/status").asText());
-    }
 }
