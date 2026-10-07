@@ -1,5 +1,8 @@
 = Actuator Extensions Changelog
 
+- **4.1.1.3**
+* The starters now ship `spring-configuration-metadata.json`, so IDEs complete and document their `management.*` properties. Earlier releases were built without it.
+* The build is now checked on JDK 17, 21 and 25.
 - **4.1.1.2**
 * New `spring-boot-actuator-mcp-starter`: exposes included actuator endpoints as MCP tools on a dedicated MCP server at `/actuator/mcp` on the management port. Respects actuator access settings and sanitizing; nothing exposed by default.
 - **4.1.1.1**
