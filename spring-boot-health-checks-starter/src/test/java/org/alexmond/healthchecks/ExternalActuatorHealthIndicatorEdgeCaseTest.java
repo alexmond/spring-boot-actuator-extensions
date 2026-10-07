@@ -19,50 +19,52 @@ import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ExternalActuatorHealthIndicatorEdgeCaseTest.TestConfig.class)
-@TestPropertySource(properties = {
-        "management.health.actuator.sites.malformed.url=http://127.0.0.1:0/malformed",
-        "management.health.actuator.sites.malformed.timeout=1s",
-        "management.health.actuator.sites.malformed.interval=0s",
-        "management.endpoint.health.show-details=always"
-})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		classes = ExternalActuatorHealthIndicatorEdgeCaseTest.TestConfig.class)
+@TestPropertySource(properties = { "management.health.actuator.sites.malformed.url=http://127.0.0.1:0/malformed",
+		"management.health.actuator.sites.malformed.timeout=1s",
+		"management.health.actuator.sites.malformed.interval=0s", "management.endpoint.health.show-details=always" })
 public class ExternalActuatorHealthIndicatorEdgeCaseTest {
 
-    @LocalServerPort
-    private int port;
+	@LocalServerPort
+	private int port;
 
-    @Autowired
-    private org.alexmond.healthchecks.actuator.HealthActuatorProperties healthActuatorProperties;
+	@Autowired
+	private org.alexmond.healthchecks.actuator.HealthActuatorProperties healthActuatorProperties;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void testMalformedJsonResponse() throws Exception {
-        healthActuatorProperties.getSites().get("malformed").setUrl("http://127.0.0.1:" + port + "/malformed");
+	@Test
+	void testMalformedJsonResponse() throws Exception {
+		healthActuatorProperties.getSites().get("malformed").setUrl("http://127.0.0.1:" + port + "/malformed");
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
-                .build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
+			.build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JsonNode root = objectMapper.readTree(response.body());
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		JsonNode root = objectMapper.readTree(response.body());
 
-        assertEquals("DOWN", root.path("status").asText());
-        JsonNode malformedSite = root.path("components").path("externalActuator").path("details").path("malformed");
-        assertEquals("DOWN", malformedSite.path("status").asText());
-        // Since it's malformed JSON, RestClient (Jackson) should throw an exception during body(Map.class)
-        // Which should be caught and mapped to DOWN
-    }
+		assertEquals("DOWN", root.path("status").asText());
+		JsonNode malformedSite = root.path("components").path("externalActuator").path("details").path("malformed");
+		assertEquals("DOWN", malformedSite.path("status").asText());
+		// Since it's malformed JSON, RestClient (Jackson) should throw an exception
+		// during body(Map.class)
+		// Which should be caught and mapped to DOWN
+	}
 
-    @Configuration
-    @EnableAutoConfiguration
-    @RestController
-    static class TestConfig {
-        @GetMapping("/malformed")
-        public String malformed() {
-            return "This is not JSON { status: UP }";
-        }
-    }
+	@Configuration
+	@EnableAutoConfiguration
+	@RestController
+	static class TestConfig {
+
+		@GetMapping("/malformed")
+		String malformed() {
+			return "This is not JSON { status: UP }";
+		}
+
+	}
+
 }

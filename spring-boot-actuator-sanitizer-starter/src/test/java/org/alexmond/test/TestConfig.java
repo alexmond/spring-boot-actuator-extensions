@@ -8,18 +8,27 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("testprop")
 @Data
 public class TestConfig {
-    private String password;
-    private String token;
-    private Multiple multiple;
 
-    @Data
-    public static class Multiple {
-        private Password password;
+	private String password;
 
-        @Data
-        public static class Password {
-            private String pass1;
-            private String pass2;
-        }
-    }
+	private String token;
+
+	private Multiple multiple;
+
+	@Data
+	public static class Multiple {
+
+		private Password password;
+
+		@Data
+		public static class Password {
+
+			private String pass1;
+
+			private String pass2;
+
+		}
+
+	}
+
 }

@@ -10,9 +10,10 @@ import org.alexmond.healthchecks.common.CommonSite;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ActuatorSite extends CommonSite {
-    /**
-     * The URL of the site to check.
-     */
-    private String url;
+
+	/**
+	 * The URL of the site to check.
+	 */
+	private String url;
 
 }

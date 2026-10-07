@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ManualHealthResponse {
-    private String status;
-    private String message;
+
+	private String status;
+
+	private String message;
+
 }

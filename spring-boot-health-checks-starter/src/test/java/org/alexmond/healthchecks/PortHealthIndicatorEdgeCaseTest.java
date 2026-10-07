@@ -17,40 +17,39 @@ import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = PortHealthIndicatorEdgeCaseTest.TestConfig.class)
-@TestPropertySource(properties = {
-        "management.health.port.sites.invalid-dns.host=non-existent-host-name-alexmond.org",
-        "management.health.port.sites.invalid-dns.port=80",
-        "management.health.port.sites.invalid-dns.timeout=1s",
-        "management.health.port.sites.invalid-dns.interval=0s",
-        "management.endpoint.health.show-details=always"
-})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		classes = PortHealthIndicatorEdgeCaseTest.TestConfig.class)
+@TestPropertySource(properties = { "management.health.port.sites.invalid-dns.host=non-existent-host-name-alexmond.org",
+		"management.health.port.sites.invalid-dns.port=80", "management.health.port.sites.invalid-dns.timeout=1s",
+		"management.health.port.sites.invalid-dns.interval=0s", "management.endpoint.health.show-details=always" })
 public class PortHealthIndicatorEdgeCaseTest {
 
-    @LocalServerPort
-    private int port;
+	@LocalServerPort
+	private int port;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void testDnsResolutionFailure() throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
-                .build();
+	@Test
+	void testDnsResolutionFailure() throws Exception {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://127.0.0.1:" + port + "/actuator/health"))
+			.build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JsonNode root = objectMapper.readTree(response.body());
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		JsonNode root = objectMapper.readTree(response.body());
 
-        assertEquals("DOWN", root.path("status").asText());
-        JsonNode dnsSite = root.path("components").path("port").path("details").path("invalid-dns");
-        assertEquals("DOWN", dnsSite.path("status").asText());
-        // error detail should contain host resolution error message
-    }
+		assertEquals("DOWN", root.path("status").asText());
+		JsonNode dnsSite = root.path("components").path("port").path("details").path("invalid-dns");
+		assertEquals("DOWN", dnsSite.path("status").asText());
+		// error detail should contain host resolution error message
+	}
 
-    @Configuration
-    @EnableAutoConfiguration
-    static class TestConfig {
-    }
+	@Configuration
+	@EnableAutoConfiguration
+	static class TestConfig {
+
+	}
+
 }

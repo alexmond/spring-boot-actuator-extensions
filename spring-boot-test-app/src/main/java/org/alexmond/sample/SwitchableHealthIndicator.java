@@ -10,17 +10,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class SwitchableHealthIndicator implements HealthIndicator {
 
-    @Setter
-    private boolean up = true;
+	@Setter
+	private boolean up = true;
 
-    @Override
-    public Health health() {
-        log.info("Health check SwitchableHealthIndicator started");
-        Health.Builder builder = new Health.Builder();
-        if (up) {
-            return builder.up().withDetail("mystatus", "UP").build();
-        } else {
-            return builder.down().withDetail("mystatus", "DOWN").build();
-        }
-    }
+	@Override
+	public Health health() {
+		log.info("Health check SwitchableHealthIndicator started");
+		Health.Builder builder = new Health.Builder();
+		if (up) {
+			return builder.up().withDetail("mystatus", "UP").build();
+		}
+		else {
+			return builder.down().withDetail("mystatus", "DOWN").build();
+		}
+	}
+
 }

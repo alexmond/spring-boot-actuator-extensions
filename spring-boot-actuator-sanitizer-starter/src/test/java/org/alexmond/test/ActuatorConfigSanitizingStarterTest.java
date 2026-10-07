@@ -12,7 +12,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,58 +22,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 class ActuatorConfigSanitizingStarterTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private SanitizingProperties sanitizingProperties;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Test
-    void contextLoads() {
-    }
+	@Autowired
+	private MockMvc mockMvc;
 
-    @Test
-    void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        assertNotNull(sanitizingProperties);
-    }
+	@Autowired
+	private SanitizingProperties sanitizingProperties;
 
-    @ParameterizedTest
-    @CsvSource({
-            "testprop.password, ***HIDDEN***",
-            "testprop.token, ***HIDDEN***",
-            "testprop.multiple.password.pass1, ***HIDDEN***",
-            "testprop.multiple.password.pass2, ***HIDDEN***"
-    })
-    void getActuatorEnv_shouldMaskSensitiveProperties(String node, String value) throws Exception {
-        StringBuffer content = new StringBuffer();
-        mockMvc.perform(get("/actuator/env"))
-                .andExpect(status().isOk())
-                .andDo(result -> content.append(result.getResponse().getContentAsString()));
-        log.info("actuator content {}", content);
+	@Test
+	void contextLoads() {
+	}
 
-        JsonNode jsonNode = objectMapper.readTree(content.toString());
-        // Assert structurally rather than on raw JSON: as of Spring Boot 4.0 the /env endpoint emits
-        // an "origin" field alongside "value", so a key-then-value substring match is no longer reliable.
-        JsonNode property = jsonNode.findValue(node);
-        assertEquals(value, property.path("value").asText());
-    }
+	@Test
+	void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
+		assertNotNull(sanitizingProperties);
+	}
 
-    @ParameterizedTest
-    @CsvSource({
-            "/inputs/password/value, ***HIDDEN***",
-            "/inputs/token/value, ***HIDDEN***",
-            "/properties/multiple/password/pass1, ***HIDDEN***",
-            "/properties/multiple/password/pass2, ***HIDDEN***"
-    })
-    void getActuatorProperties_shouldMaskSensitiveProperties(String node, String value) throws Exception {
-        StringBuffer content = new StringBuffer();
-        mockMvc.perform(get("/actuator/configprops"))
-                .andExpect(status().isOk())
-                .andDo(result -> content.append(result.getResponse().getContentAsString()));
+	@ParameterizedTest
+	@CsvSource({ "testprop.password, ***HIDDEN***", "testprop.token, ***HIDDEN***",
+			"testprop.multiple.password.pass1, ***HIDDEN***", "testprop.multiple.password.pass2, ***HIDDEN***" })
+	void getActuatorEnv_shouldMaskSensitiveProperties(String node, String value) throws Exception {
+		StringBuffer content = new StringBuffer();
+		mockMvc.perform(get("/actuator/env"))
+			.andExpect(status().isOk())
+			.andDo((result) -> content.append(result.getResponse().getContentAsString()));
+		log.info("actuator content {}", content);
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(content.toString());
+		JsonNode jsonNode = objectMapper.readTree(content.toString());
+		// Assert structurally rather than on raw JSON: as of Spring Boot 4.0 the /env
+		// endpoint emits
+		// an "origin" field alongside "value", so a key-then-value substring match is no
+		// longer reliable.
+		JsonNode property = jsonNode.findValue(node);
+		assertEquals(value, property.path("value").asText());
+	}
 
-        assertEquals(value, root.findValue("testConfig").at(node).asText());
-    }
+	@ParameterizedTest
+	@CsvSource({ "/inputs/password/value, ***HIDDEN***", "/inputs/token/value, ***HIDDEN***",
+			"/properties/multiple/password/pass1, ***HIDDEN***", "/properties/multiple/password/pass2, ***HIDDEN***" })
+	void getActuatorProperties_shouldMaskSensitiveProperties(String node, String value) throws Exception {
+		StringBuffer content = new StringBuffer();
+		mockMvc.perform(get("/actuator/configprops"))
+			.andExpect(status().isOk())
+			.andDo((result) -> content.append(result.getResponse().getContentAsString()));
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(content.toString());
+
+		assertEquals(value, root.findValue("testConfig").at(node).asText());
+	}
+
 }
