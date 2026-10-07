@@ -1,6 +1,7 @@
 package org.alexmond.actuator.mcp;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
@@ -99,6 +100,23 @@ class ActuatorToolFactoryTest {
 				.contains("write operation")
 				.contains("level");
 		});
+	}
+
+	@Test
+	void generatedDescriptionDoesNotDependOnTheDefaultLocale() {
+		// In Turkish a plain toLowerCase() turns WRITE into "wrıte" (dotless i)
+		Locale original = Locale.getDefault();
+		Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+		try {
+			runner.run((context) -> {
+				var tools = factory
+					.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
+				assertThat(tool(tools, "actuator_alpha_write").tool().description()).contains("write operation");
+			});
+		}
+		finally {
+			Locale.setDefault(original);
+		}
 	}
 
 	@Test
