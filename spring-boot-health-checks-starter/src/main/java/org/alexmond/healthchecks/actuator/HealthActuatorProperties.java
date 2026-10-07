@@ -7,17 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Configuration properties for local actuator health checks.
- * Properties are bound to the "management.actuatorcheck" prefix.
- * Used to configure periodic health checks for multiple remote sites.
+ * Configuration properties for local actuator health checks. Properties are bound to the
+ * "management.actuatorcheck" prefix. Used to configure periodic health checks for
+ * multiple remote sites.
  */
 @Data
 @ConfigurationProperties("management.health.actuator")
 public class HealthActuatorProperties {
-    /**
-     * Map of site configurations where key is site identifier
-     * and value contains site-specific settings.
-     */
-    private Map<String, ActuatorSite> sites = new HashMap<>();
+
+	/**
+	 * Map of site configurations where key is site identifier and value contains
+	 * site-specific settings.
+	 */
+	private Map<String, ActuatorSite> sites = new HashMap<>();
 
 }

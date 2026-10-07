@@ -25,53 +25,52 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DirtiesContext
 class AllExternalDownTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    HealthPortProperties healthPortProperties;
+	@Autowired
+	HealthPortProperties healthPortProperties;
 
+	@Test
+	void contextLoads() {
+	}
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
+		// Act
+		Object result = healthPortProperties.getSites();
+		// Assert
+		assertNotNull(result);
+	}
 
-    @Test
-    void defaultSanitizingProperties_shouldReturnNonNullSanitizingProperties() {
-        // Act
-        Object result = healthPortProperties.getSites();
-        // Assert
-        assertNotNull(result);
-    }
+	@Test
+	@DirtiesContext
+	void UPHealthCheckTest() throws IOException, InterruptedException {
+		StringBuffer content = new StringBuffer();
+		// Thread.sleep(300000);
+		HttpClient httpClient = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create("http://localhost:9082/actuator/health"))
+			.GET()
+			.build();
+		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+		content.append(response.body());
+		log.info("actuator content {}", content);
+		JsonNode jsonNode = objectMapper.readTree(content.toString());
 
+		// Assert main status
+		assertEquals("DOWN", jsonNode.at("/status").asText());
 
-    @Test
-    @DirtiesContext
-    public void UPHealthCheckTest() throws IOException, InterruptedException {
-        StringBuffer content = new StringBuffer();
-//        Thread.sleep(300000);
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9082/actuator/health"))
-                .GET()
-                .build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        content.append(response.body());
-        log.info("actuator content {}", content);
-        JsonNode jsonNode = objectMapper.readTree(content.toString());
+		// Assert component statuses
+		assertEquals("DOWN", jsonNode.at("/components/externalActuator/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/externalActuator/details/self/status").asText());
 
-        // Assert main status
-        assertEquals("DOWN", jsonNode.at("/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/port/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/port/details/self/status").asText());
 
-        // Assert component statuses
-        assertEquals("DOWN", jsonNode.at("/components/externalActuator/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalActuator/details/self/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/externalHttp/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self/status").asText());
+		assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self2/status").asText());
 
-        assertEquals("DOWN", jsonNode.at("/components/port/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/port/details/self/status").asText());
+	}
 
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self/status").asText());
-        assertEquals("DOWN", jsonNode.at("/components/externalHttp/details/self2/status").asText());
-
-    }
 }

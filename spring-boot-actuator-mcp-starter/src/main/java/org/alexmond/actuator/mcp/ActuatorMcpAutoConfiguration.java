@@ -30,49 +30,48 @@ import tools.jackson.databind.json.JsonMapper;
  * Exposes actuator endpoints as MCP tools on a dedicated MCP server.
  */
 @AutoConfiguration(after = EndpointAutoConfiguration.class)
-@ConditionalOnClass({Endpoint.class, McpSyncServer.class, WebMvcStreamableServerTransportProvider.class})
+@ConditionalOnClass({ Endpoint.class, McpSyncServer.class, WebMvcStreamableServerTransportProvider.class })
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnBooleanProperty(name = "management.endpoints.mcp.enabled", matchIfMissing = true)
 @EnableConfigurationProperties(McpEndpointProperties.class)
 public class ActuatorMcpAutoConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean
-    McpEndpointDiscoverer mcpEndpointDiscoverer(ApplicationContext applicationContext,
-                                                ObjectProvider<ParameterValueMapper> parameterValueMapper,
-                                                ObjectProvider<OperationInvokerAdvisor> invokerAdvisors,
-                                                ObjectProvider<EndpointAccessResolver> accessResolver,
-                                                Environment environment, McpEndpointProperties properties) {
-        EndpointAccessResolver resolver = accessResolver.getIfAvailable(
-                () -> new PropertiesEndpointAccessResolver(environment));
-        return new McpEndpointDiscoverer(applicationContext,
-                parameterValueMapper.getIfAvailable(ConversionServiceParameterValueMapper::new),
-                invokerAdvisors.orderedStream().toList(),
-                List.of(new IncludeExcludeEndpointFilter<>(McpEndpoint.class,
-                        properties.getExposure().getInclude(), properties.getExposure().getExclude())),
-                List.of(OperationFilter.byAccess(resolver)));
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	McpEndpointDiscoverer mcpEndpointDiscoverer(ApplicationContext applicationContext,
+			ObjectProvider<ParameterValueMapper> parameterValueMapper,
+			ObjectProvider<OperationInvokerAdvisor> invokerAdvisors,
+			ObjectProvider<EndpointAccessResolver> accessResolver, Environment environment,
+			McpEndpointProperties properties) {
+		EndpointAccessResolver resolver = accessResolver
+			.getIfAvailable(() -> new PropertiesEndpointAccessResolver(environment));
+		return new McpEndpointDiscoverer(applicationContext,
+				parameterValueMapper.getIfAvailable(ConversionServiceParameterValueMapper::new),
+				invokerAdvisors.orderedStream().toList(), List.of(new IncludeExcludeEndpointFilter<>(McpEndpoint.class,
+						properties.getExposure().getInclude(), properties.getExposure().getExclude())),
+				List.of(OperationFilter.byAccess(resolver)));
+	}
 
-    @Bean
-    @ConditionalOnMissingBean
-    ActuatorMcpServer actuatorMcpServer(McpEndpointDiscoverer discoverer, McpEndpointProperties properties,
-                                        ObjectProvider<EndpointJsonMapper> endpointJsonMapper,
-                                        ObjectProvider<JsonMapper> jsonMapper, Environment environment) {
-        JsonMapper mapper = endpointJsonMapper.getIfAvailable() != null
-                ? endpointJsonMapper.getIfAvailable().get()
-                : jsonMapper.getIfAvailable(() -> JsonMapper.builder().build());
-        ActuatorToolFactory factory = new ActuatorToolFactory(mapper,
-                new ResponseLimiter(properties.getMaxResponseChars()));
-        String basePath = environment.getProperty("management.endpoints.web.base-path", "/actuator");
-        return new ActuatorMcpServer(mcpPath(basePath), factory.createTools(discoverer.getEndpoints()),
-                properties.getAllowedOrigins());
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	ActuatorMcpServer actuatorMcpServer(McpEndpointDiscoverer discoverer, McpEndpointProperties properties,
+			ObjectProvider<EndpointJsonMapper> endpointJsonMapper, ObjectProvider<JsonMapper> jsonMapper,
+			Environment environment) {
+		JsonMapper mapper = (endpointJsonMapper.getIfAvailable() != null) ? endpointJsonMapper.getIfAvailable().get()
+				: jsonMapper.getIfAvailable(() -> JsonMapper.builder().build());
+		ActuatorToolFactory factory = new ActuatorToolFactory(mapper,
+				new ResponseLimiter(properties.getMaxResponseChars()));
+		String basePath = environment.getProperty("management.endpoints.web.base-path", "/actuator");
+		return new ActuatorMcpServer(mcpPath(basePath), factory.createTools(discoverer.getEndpoints()),
+				properties.getAllowedOrigins());
+	}
 
-    static String mcpPath(String basePath) {
-        String base = (basePath == null) ? "" : basePath.trim();
-        while (base.endsWith("/")) {
-            base = base.substring(0, base.length() - 1);
-        }
-        return base + "/mcp";
-    }
+	static String mcpPath(String basePath) {
+		String base = (basePath != null) ? basePath.trim() : "";
+		while (base.endsWith("/")) {
+			base = base.substring(0, base.length() - 1);
+		}
+		return base + "/mcp";
+	}
+
 }

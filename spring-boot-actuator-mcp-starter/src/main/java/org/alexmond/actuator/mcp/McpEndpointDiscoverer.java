@@ -19,38 +19,39 @@ import org.springframework.context.ApplicationContext;
  */
 public class McpEndpointDiscoverer extends EndpointDiscoverer<McpEndpoint, McpOperation> {
 
-    /**
-     * Endpoints whose output cannot be sent as text.
-     */
-    public static final Set<String> UNSUPPORTED_ENDPOINTS = Set.of("heapdump", "logfile");
+	/**
+	 * Endpoints whose output cannot be sent as text.
+	 */
+	public static final Set<String> UNSUPPORTED_ENDPOINTS = Set.of("heapdump", "logfile");
 
-    public McpEndpointDiscoverer(ApplicationContext applicationContext, ParameterValueMapper parameterValueMapper,
-                                 Collection<OperationInvokerAdvisor> invokerAdvisors,
-                                 Collection<EndpointFilter<McpEndpoint>> endpointFilters,
-                                 Collection<OperationFilter<McpOperation>> operationFilters) {
-        super(applicationContext, parameterValueMapper, invokerAdvisors, endpointFilters, operationFilters);
-    }
+	public McpEndpointDiscoverer(ApplicationContext applicationContext, ParameterValueMapper parameterValueMapper,
+			Collection<OperationInvokerAdvisor> invokerAdvisors,
+			Collection<EndpointFilter<McpEndpoint>> endpointFilters,
+			Collection<OperationFilter<McpOperation>> operationFilters) {
+		super(applicationContext, parameterValueMapper, invokerAdvisors, endpointFilters, operationFilters);
+	}
 
-    @Override
-    protected boolean isInvocable(McpEndpoint endpoint) {
-        return !UNSUPPORTED_ENDPOINTS.contains(endpoint.getEndpointId().toLowerCaseString())
-                && super.isInvocable(endpoint);
-    }
+	@Override
+	protected boolean isInvocable(McpEndpoint endpoint) {
+		return !UNSUPPORTED_ENDPOINTS.contains(endpoint.getEndpointId().toLowerCaseString())
+				&& super.isInvocable(endpoint);
+	}
 
-    @Override
-    protected McpEndpoint createEndpoint(Object endpointBean, EndpointId id, Access defaultAccess,
-                                         Collection<McpOperation> operations) {
-        return new McpEndpoint(this, endpointBean, id, defaultAccess, operations);
-    }
+	@Override
+	protected McpEndpoint createEndpoint(Object endpointBean, EndpointId id, Access defaultAccess,
+			Collection<McpOperation> operations) {
+		return new McpEndpoint(this, endpointBean, id, defaultAccess, operations);
+	}
 
-    @Override
-    protected McpOperation createOperation(EndpointId endpointId, DiscoveredOperationMethod operationMethod,
-                                           OperationInvoker invoker) {
-        return new McpOperation(endpointId, operationMethod, invoker);
-    }
+	@Override
+	protected McpOperation createOperation(EndpointId endpointId, DiscoveredOperationMethod operationMethod,
+			OperationInvoker invoker) {
+		return new McpOperation(endpointId, operationMethod, invoker);
+	}
 
-    @Override
-    protected OperationKey createOperationKey(McpOperation operation) {
-        return new OperationKey(operation.getName(), () -> "MCP operation " + operation.getName());
-    }
+	@Override
+	protected OperationKey createOperationKey(McpOperation operation) {
+		return new OperationKey(operation.getName(), () -> "MCP operation " + operation.getName());
+	}
+
 }

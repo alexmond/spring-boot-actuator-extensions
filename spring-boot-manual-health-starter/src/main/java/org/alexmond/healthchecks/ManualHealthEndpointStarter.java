@@ -7,8 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 public class ManualHealthEndpointStarter {
 
-    @Bean
-    public ManualHealthEndpoint manualHealthEndpoint() {
-        return new ManualHealthEndpoint();
-    }
+	@Bean
+	public ManualHealthEndpoint manualHealthEndpoint() {
+		return new ManualHealthEndpoint();
+	}
+
 }
