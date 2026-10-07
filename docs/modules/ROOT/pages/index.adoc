@@ -5,7 +5,7 @@
 :description: A collection of Spring Boot Actuator extensions providing enhanced monitoring and health check capabilities for Java applications
 :author: Alex Mondshain
 :email: alex.mondshain@gmail.com
-:revnumber: 4.0.8.3
+:revnumber: 4.0.8.4
 :last-update-label: Last updated
 :last-update: 2026-06-19
 
