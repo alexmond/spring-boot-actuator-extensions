@@ -6,8 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A multi-module Maven project publishing Spring Boot Actuator extension starters to Maven Central
 (groupId `org.alexmond`). Each starter is an auto-configured library; the repo also ships a non-published
-sample app for manual verification. Java 17, Spring Boot 4.0.x (managed by the `spring-boot-starter-parent`)
-on `main`; the `3.5` branch is the Spring Boot 3.5.x maintenance line.
+sample app for manual verification. Java 17. **This branch (`4.0`) is the Spring Boot 4.0 maintenance
+line** — the `spring-boot-starter-parent` version in the root `pom.xml` is the source of truth. It takes
+fixes and Boot 4.0 patch bumps only.
+
+- **`main` is always the newest Spring Boot line.** Older lines live on `<major>.<minor>` branches:
+  `4.0` (Spring Boot 4.0.x, maintained) and `3.5` (Spring Boot 3.5.x, end-of-life).
+- When `main` moves to a new Boot **minor**, cut the outgoing line to its own `<major>.<minor>`
+  branch **first**, from the pre-bump head. Every Boot minor gets a branch, not only a new major.
+- A fix that applies to every line goes to each branch, one PR each.
 
 Boot 4.0 notes (relevant when reading the code): the health API lives in `org.springframework.boot.health.contributor`
 (`Health`, `HealthIndicator`, `Status`) from the standalone `spring-boot-health` module — declared explicitly in
@@ -21,11 +28,11 @@ There is **no Maven wrapper** — use a locally installed `mvn`. (Several siblin
 `./mvnw`; this one does not — don't reach for it here.)
 
 ```bash
-# Build + test everything including the sample app (exact CI command)
-mvn -B package --file pom.xml -Pdefault --no-transfer-progress
+# Build + test everything including the sample app (exact CI command; CI runs it on JDK 17, 21 and 25)
+mvn -B verify --file pom.xml -Pdefault --no-transfer-progress
 
 # Same thing, short form
-mvn -B package -Pdefault
+mvn -B verify -Pdefault
 
 # Build/test only the published starters (no sample app — the default modules list)
 mvn package
@@ -49,6 +56,7 @@ Note the module layout in `pom.xml`: the three starters are always-on `<modules>
 ### Coverage gate
 
 JaCoCo enforces a **minimum 80% line coverage per module** (`BUNDLE` rule in the parent `pom.xml`).
+The `check` goal runs at `verify`, so `mvn package` skips the gate.
 A build can fail at the `check` goal on coverage even when all tests pass — add tests, don't lower the bar
 without reason. Coverage reports land in each module's `target/site/jacoco/`.
 
@@ -67,8 +75,11 @@ Every starter follows the Spring Boot auto-configuration starter pattern:
    imports file** or Spring Boot will never load it.
 2. `@ConfigurationProperties` classes (bound via `@EnableConfigurationProperties`) expose all tuning under
    `management.*` prefixes.
-3. Lombok is used throughout (`@RequiredArgsConstructor`, `@Setter`, `@Slf4j`, etc.) — the
-   `maven-compiler-plugin` is configured with the Lombok annotation processor path in the parent POM.
+3. Lombok is used throughout (`@RequiredArgsConstructor`, `@Setter`, `@Slf4j`, etc.). The parent POM
+   lists **both** Lombok and `spring-boot-configuration-processor` under the `maven-compiler-plugin`
+   `annotationProcessorPaths`. Listing processor paths turns off classpath discovery, so any new
+   annotation processor must be added there too — the configuration processor is what makes the
+   starters ship `spring-configuration-metadata.json`.
 
 ### Modules
 
