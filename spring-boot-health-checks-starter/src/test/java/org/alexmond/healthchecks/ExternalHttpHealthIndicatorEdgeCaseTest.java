@@ -85,7 +85,7 @@ public class ExternalHttpHealthIndicatorEdgeCaseTest {
 	static class TestConfig {
 
 		@GetMapping("/slow")
-		public String slow() throws InterruptedException {
+		String slow() throws InterruptedException {
 			Thread.sleep(2000);
 			return "OK";
 		}

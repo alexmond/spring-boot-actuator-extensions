@@ -48,7 +48,7 @@ public class ActuatorToolFactory {
 				tools.add(createTool(endpoint, operation));
 			}
 		}
-		tools.sort(Comparator.comparing(tool -> tool.tool().name()));
+		tools.sort(Comparator.comparing((tool) -> tool.tool().name()));
 		return tools;
 	}
 
@@ -73,13 +73,13 @@ public class ActuatorToolFactory {
 	static String toolName(McpEndpoint endpoint, McpOperation operation) {
 		String base = "actuator_" + endpoint.getEndpointId().toLowerCaseString();
 		long declared = Math.max(declaredOperationCount(endpoint), endpoint.getOperations().size());
-		return declared == 1 ? base : base + "_" + operation.getName();
+		return (declared == 1) ? base : base + "_" + operation.getName();
 	}
 
 	private static long declaredOperationCount(McpEndpoint endpoint) {
 		Class<?> type = ClassUtils.getUserClass(endpoint.getEndpointBean());
 		return Arrays.stream(ReflectionUtils.getUniqueDeclaredMethods(type))
-			.filter(method -> AnnotatedElementUtils.hasAnnotation(method, ReadOperation.class)
+			.filter((method) -> AnnotatedElementUtils.hasAnnotation(method, ReadOperation.class)
 					|| AnnotatedElementUtils.hasAnnotation(method, WriteOperation.class)
 					|| AnnotatedElementUtils.hasAnnotation(method, DeleteOperation.class))
 			.count();
@@ -122,12 +122,15 @@ public class ActuatorToolFactory {
 		return Map.of("type", "string");
 	}
 
+	// Locale-sensitive case conversion kept as is; switching to Locale.ROOT is a
+	// follow-up.
+	@SuppressWarnings("PMD.UseLocaleWithCaseConversions")
 	private static String description(McpOperation operation) {
 		String endpointId = operation.getEndpointId().toLowerCaseString();
 		return ToolDescriptions.find(endpointId, operation.getName()).orElseGet(() -> {
 			String parameters = operation.getParameters()
 				.stream()
-				.map(p -> p.getName() + (p.isMandatory() ? "" : " (optional)"))
+				.map((p) -> p.getName() + (p.isMandatory() ? "" : " (optional)"))
 				.collect(Collectors.joining(", "));
 			return "Spring Boot Actuator '" + endpointId + "' endpoint, " + operation.getType().name().toLowerCase()
 					+ " operation '" + operation.getName() + "'."
@@ -141,7 +144,7 @@ public class ActuatorToolFactory {
 			.stream()
 			.filter(OperationParameter::isMandatory)
 			.map(OperationParameter::getName)
-			.filter(name -> args.get(name) == null)
+			.filter((name) -> args.get(name) == null)
 			.toList();
 		if (!missing.isEmpty()) {
 			return error("Missing required argument(s): " + String.join(", ", missing));
@@ -156,7 +159,7 @@ public class ActuatorToolFactory {
 			return error("Result could not be serialised: " + ex.getOriginalMessage());
 		}
 		catch (RuntimeException ex) {
-			return error(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName());
+			return error((ex.getMessage() != null) ? ex.getMessage() : ex.getClass().getSimpleName());
 		}
 	}
 

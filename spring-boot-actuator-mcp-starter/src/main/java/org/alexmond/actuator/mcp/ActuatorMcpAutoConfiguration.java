@@ -57,7 +57,7 @@ public class ActuatorMcpAutoConfiguration {
 	ActuatorMcpServer actuatorMcpServer(McpEndpointDiscoverer discoverer, McpEndpointProperties properties,
 			ObjectProvider<EndpointJsonMapper> endpointJsonMapper, ObjectProvider<JsonMapper> jsonMapper,
 			Environment environment) {
-		JsonMapper mapper = endpointJsonMapper.getIfAvailable() != null ? endpointJsonMapper.getIfAvailable().get()
+		JsonMapper mapper = (endpointJsonMapper.getIfAvailable() != null) ? endpointJsonMapper.getIfAvailable().get()
 				: jsonMapper.getIfAvailable(() -> JsonMapper.builder().build());
 		ActuatorToolFactory factory = new ActuatorToolFactory(mapper,
 				new ResponseLimiter(properties.getMaxResponseChars()));
@@ -67,7 +67,7 @@ public class ActuatorMcpAutoConfiguration {
 	}
 
 	static String mcpPath(String basePath) {
-		String base = (basePath == null) ? "" : basePath.trim();
+		String base = (basePath != null) ? basePath.trim() : "";
 		while (base.endsWith("/")) {
 			base = base.substring(0, base.length() - 1);
 		}

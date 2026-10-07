@@ -84,12 +84,12 @@ final class TestEndpoints {
 		private String value = "initial";
 
 		@ReadOperation
-		public String get() {
+		String get() {
 			return value;
 		}
 
 		@WriteOperation
-		public void set(String value) {
+		void set(String value) {
 			this.value = value;
 		}
 
@@ -101,22 +101,22 @@ final class TestEndpoints {
 		private String level = "INFO";
 
 		@ReadOperation
-		public Map<String, String> read() {
+		Map<String, String> read() {
 			return Map.of("level", level);
 		}
 
 		@ReadOperation
-		public String readOne(@Selector String name) {
+		String readOne(@Selector String name) {
 			return "value-of-" + name;
 		}
 
 		@WriteOperation
-		public void write(String level) {
+		void write(String level) {
 			this.level = level;
 		}
 
 		@DeleteOperation
-		public void reset() {
+		void reset() {
 			this.level = "INFO";
 		}
 
@@ -126,8 +126,8 @@ final class TestEndpoints {
 	static class DashEndpoint {
 
 		@ReadOperation
-		public Map<String, Object> status(@Nullable Integer limit, @Nullable Boolean verbose) {
-			return Map.of("limit", limit == null ? 0 : limit, "verbose", verbose != null && verbose);
+		Map<String, Object> status(@Nullable Integer limit, @Nullable Boolean verbose) {
+			return Map.of("limit", (limit != null) ? limit : 0, "verbose", verbose != null && verbose);
 		}
 
 	}
@@ -136,22 +136,22 @@ final class TestEndpoints {
 	static class BoomEndpoint {
 
 		@ReadOperation
-		public String fail() {
+		String fail() {
 			throw new IllegalStateException("boom went the endpoint");
 		}
 
 		@ReadOperation
-		public Object empty() {
+		Object empty() {
 			return new Unreadable();
 		}
 
 		@ReadOperation
-		public String nothing(@Selector String key) {
+		String nothing(@Selector String key) {
 			return null;
 		}
 
 		@ReadOperation
-		public String big(@Selector int size, @Selector String fill) {
+		String big(@Selector int size, @Selector String fill) {
 			return fill.repeat(size);
 		}
 
@@ -173,7 +173,7 @@ final class TestEndpoints {
 	static class FakeHeapdumpEndpoint {
 
 		@ReadOperation
-		public String dump() {
+		String dump() {
 			return "binary";
 		}
 
@@ -183,7 +183,7 @@ final class TestEndpoints {
 	static class FakeShutdownEndpoint {
 
 		@WriteOperation
-		public String shutdown() {
+		String shutdown() {
 			return "bye";
 		}
 

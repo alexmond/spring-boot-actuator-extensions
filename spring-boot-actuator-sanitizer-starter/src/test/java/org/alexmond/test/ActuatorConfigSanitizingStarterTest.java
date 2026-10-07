@@ -12,7 +12,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,7 +46,7 @@ class ActuatorConfigSanitizingStarterTest {
 		StringBuffer content = new StringBuffer();
 		mockMvc.perform(get("/actuator/env"))
 			.andExpect(status().isOk())
-			.andDo(result -> content.append(result.getResponse().getContentAsString()));
+			.andDo((result) -> content.append(result.getResponse().getContentAsString()));
 		log.info("actuator content {}", content);
 
 		JsonNode jsonNode = objectMapper.readTree(content.toString());
@@ -64,7 +65,7 @@ class ActuatorConfigSanitizingStarterTest {
 		StringBuffer content = new StringBuffer();
 		mockMvc.perform(get("/actuator/configprops"))
 			.andExpect(status().isOk())
-			.andDo(result -> content.append(result.getResponse().getContentAsString()));
+			.andDo((result) -> content.append(result.getResponse().getContentAsString()));
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = mapper.readTree(content.toString());

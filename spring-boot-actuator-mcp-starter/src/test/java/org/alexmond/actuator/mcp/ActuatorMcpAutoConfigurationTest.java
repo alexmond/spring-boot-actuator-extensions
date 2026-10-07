@@ -13,7 +13,7 @@ class ActuatorMcpAutoConfigurationTest {
 
 	@Test
 	void bindsDefaults() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			McpEndpointProperties properties = context.getBean(McpEndpointProperties.class);
 			assertThat(properties.isEnabled()).isTrue();
 			assertThat(properties.getExposure().getInclude()).isEmpty();
@@ -27,7 +27,7 @@ class ActuatorMcpAutoConfigurationTest {
 		runner
 			.withPropertyValues("management.endpoints.mcp.exposure.include=health,info",
 					"management.endpoints.mcp.exposure.exclude=env", "management.endpoints.mcp.max-response-chars=500")
-			.run(context -> {
+			.run((context) -> {
 				McpEndpointProperties properties = context.getBean(McpEndpointProperties.class);
 				assertThat(properties.getExposure().getInclude()).containsExactly("health", "info");
 				assertThat(properties.getExposure().getExclude()).containsExactly("env");
@@ -38,21 +38,21 @@ class ActuatorMcpAutoConfigurationTest {
 	@Test
 	void backsOffWhenDisabled() {
 		runner.withPropertyValues("management.endpoints.mcp.enabled=false")
-			.run(context -> assertThat(context).doesNotHaveBean(McpEndpointProperties.class));
+			.run((context) -> assertThat(context).doesNotHaveBean(McpEndpointProperties.class));
 	}
 
 	@Test
 	void backsOffOutsideServletWebApps() {
 		new org.springframework.boot.test.context.runner.ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(ActuatorMcpAutoConfiguration.class))
-			.run(context -> assertThat(context).doesNotHaveBean(McpEndpointProperties.class));
+			.run((context) -> assertThat(context).doesNotHaveBean(McpEndpointProperties.class));
 	}
 
 	@Test
 	void allowedOriginsAreEmptyByDefaultAndBindable() {
-		runner.run(context -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins()).isEmpty());
+		runner.run((context) -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins()).isEmpty());
 		runner.withPropertyValues("management.endpoints.mcp.allowed-origins=http://localhost:6274,http://127.0.0.1:*")
-			.run(context -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins())
+			.run((context) -> assertThat(context.getBean(McpEndpointProperties.class).getAllowedOrigins())
 				.containsExactly("http://localhost:6274", "http://127.0.0.1:*"));
 	}
 
@@ -69,7 +69,7 @@ class ActuatorMcpAutoConfigurationTest {
 		runner
 			.withConfiguration(AutoConfigurations
 				.of(org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfiguration.class))
-			.run(context -> assertThat(context.getBean(ActuatorMcpServer.class).getToolNames()).isEmpty());
+			.run((context) -> assertThat(context.getBean(ActuatorMcpServer.class).getToolNames()).isEmpty());
 	}
 
 }

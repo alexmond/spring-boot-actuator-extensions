@@ -30,7 +30,7 @@ class AllExternalDownTest {
 
 	@Test
 	@DirtiesContext
-	public void UPHealthCheckTest() throws IOException, InterruptedException {
+	void UPHealthCheckTest() throws IOException, InterruptedException {
 		StringBuffer content = new StringBuffer();
 		HttpClient httpClient = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()

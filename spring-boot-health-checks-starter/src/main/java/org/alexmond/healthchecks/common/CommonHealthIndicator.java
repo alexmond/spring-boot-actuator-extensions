@@ -25,14 +25,14 @@ public abstract class CommonHealthIndicator implements HealthIndicator {
 	 * Returns the map of sites to be health checked.
 	 * @return Map of site names to their configurations
 	 */
-	abstract protected Map<String, ? extends CommonSite> getSites();
+	protected abstract Map<String, ? extends CommonSite> getSites();
 
 	/**
 	 * Performs health check for a specific site.
 	 * @param site The site configuration to check
 	 * @return Health status of the site
 	 */
-	abstract protected Health checkSite(CommonSite site);
+	protected abstract Health checkSite(CommonSite site);
 
 	/**
 	 * Performs health checks for all configured sites. Uses cached results if they are

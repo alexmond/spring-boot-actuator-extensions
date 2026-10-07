@@ -50,7 +50,7 @@ public class ActuatorMcpServer implements DisposableBean {
 			.build();
 		String version = ActuatorMcpServer.class.getPackage().getImplementationVersion();
 		this.server = McpServer.sync(transport)
-			.serverInfo(SERVER_NAME, version != null ? version : "dev")
+			.serverInfo(SERVER_NAME, (version != null) ? version : "dev")
 			.jsonMapper(jsonMapper)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
 			.tools(tools)

@@ -13,7 +13,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Slf4j
@@ -40,7 +42,7 @@ class AllExternalUpTest {
 
 	@Test
 	@DirtiesContext
-	public void UPHealthCheckTest() throws JacksonException {
+	void UPHealthCheckTest() throws JacksonException {
 		StringBuffer content = new StringBuffer();
 		// Thread.sleep(300000);
 		RestTemplate restTemplate = new RestTemplate();
