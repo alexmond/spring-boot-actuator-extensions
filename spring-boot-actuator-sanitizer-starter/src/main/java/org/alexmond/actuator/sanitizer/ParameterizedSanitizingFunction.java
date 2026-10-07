@@ -5,6 +5,7 @@ import org.springframework.boot.actuate.endpoint.SanitizableData;
 import org.springframework.boot.actuate.endpoint.SanitizingFunction;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -79,8 +80,9 @@ public class ParameterizedSanitizingFunction implements SanitizingFunction {
         }
 
         // Check exact matches (case-insensitive)
+        String lowerCaseKey = key.toLowerCase(Locale.ROOT);
         if (sanitizingProperties.getKeys().stream()
-                .anyMatch(sensitiveKey -> key.toLowerCase().contains(sensitiveKey.toLowerCase()))) {
+                .anyMatch(sensitiveKey -> lowerCaseKey.contains(sensitiveKey.toLowerCase(Locale.ROOT)))) {
             return true;
         }
 
