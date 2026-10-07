@@ -48,7 +48,7 @@ jobs:
       # green (tokenless upload is not allowed on this org).
       - name: Add coverage to PR
         if: ${{ env.CODECOV_TOKEN != '' && matrix.java == '17' }}
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ env.CODECOV_TOKEN }}
           files: ${{ github.workspace }}/*/target/site/jacoco/jacoco.xml
