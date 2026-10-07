@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -122,9 +123,6 @@ public class ActuatorToolFactory {
 		return Map.of("type", "string");
 	}
 
-	// Locale-sensitive case conversion kept as is; switching to Locale.ROOT is a
-	// follow-up.
-	@SuppressWarnings("PMD.UseLocaleWithCaseConversions")
 	private static String description(McpOperation operation) {
 		String endpointId = operation.getEndpointId().toLowerCaseString();
 		return ToolDescriptions.find(endpointId, operation.getName()).orElseGet(() -> {
@@ -132,8 +130,8 @@ public class ActuatorToolFactory {
 				.stream()
 				.map((p) -> p.getName() + (p.isMandatory() ? "" : " (optional)"))
 				.collect(Collectors.joining(", "));
-			return "Spring Boot Actuator '" + endpointId + "' endpoint, " + operation.getType().name().toLowerCase()
-					+ " operation '" + operation.getName() + "'."
+			return "Spring Boot Actuator '" + endpointId + "' endpoint, "
+					+ operation.getType().name().toLowerCase(Locale.ROOT) + " operation '" + operation.getName() + "'."
 					+ (parameters.isEmpty() ? "" : " Arguments: " + parameters + ".");
 		});
 	}

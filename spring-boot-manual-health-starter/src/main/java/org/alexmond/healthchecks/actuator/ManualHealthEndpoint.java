@@ -10,6 +10,8 @@ import org.springframework.boot.health.contributor.Health;
 import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.boot.health.contributor.Status;
 
+import java.util.Locale;
+
 /**
  * Manual health endpoint for graceful shutdown and service state control. Allows
  * temporary suspension of service or termination before shutdown, enabling discovery to
@@ -56,12 +58,9 @@ public class ManualHealthEndpoint implements HealthIndicator {
 	 * @return the updated {@link Status} with a descriptive message
 	 */
 	@WriteOperation
-	// Locale-sensitive case conversion kept as is; switching to Locale.ROOT is a
-	// follow-up.
-	@SuppressWarnings("PMD.UseLocaleWithCaseConversions")
 	public Status setStatus(String status) {
 		log.info("Manual health status change requested to: {}", status);
-		Status newStatus = switch (status.toUpperCase()) {
+		Status newStatus = switch (status.toUpperCase(Locale.ROOT)) {
 			case "UP" -> Status.UP;
 			case "OUT_OF_SERVICE" -> Status.OUT_OF_SERVICE;
 			case "DOWN" -> Status.DOWN;
