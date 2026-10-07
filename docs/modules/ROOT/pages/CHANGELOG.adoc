@@ -2,7 +2,8 @@
 
 - **4.1.1.4**
 * Fixed a connection leak in the external HTTP and actuator health indicators. Each check built an HTTP client and never closed it, so its keep-alive connection stayed open until garbage collection. The client is now closed after every check. Reported health details are unchanged.
-* Fixed case-insensitive matching under non-English default locales such as Turkish. `health-manual` no longer rejects `out_of_service` in lower or mixed case, and the sanitizer no longer leaves keys such as `MY.PRIVATE.VALUE` unmasked. Generated MCP tool descriptions are also locale-independent.
+* *Security:* under a Turkish or Azerbaijani default locale the sanitizer left keys containing an upper-case `I`, such as `MY.PRIVATE.VALUE`, unmasked in `/env` and `/configprops`. Key matching is now locale-independent. Upgrade if your JVM may run with such a default locale.
+* Fixed case-insensitive matching under the same locales elsewhere: `health-manual` no longer rejects `out_of_service` in lower or mixed case, and generated MCP tool descriptions are locale-independent.
 - **4.1.1.3**
 * The starters now ship `spring-configuration-metadata.json`, so IDEs complete and document their `management.*` properties. Earlier releases were built without it.
 * The build is now checked on JDK 17, 21 and 25.
