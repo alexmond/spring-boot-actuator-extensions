@@ -6,7 +6,7 @@ image:https://img.shields.io/maven-central/v/org.alexmond/spring-boot-actuator-s
 image:https://img.shields.io/maven-central/v/org.alexmond/spring-boot-health-checks-starter.svg?label=Maven%20Central%20health%20checks[Maven Central health checks,link=https://search.maven.org/artifact/org.alexmond/spring-boot-health-checks-starter]
 
 image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[License,link=LICENSE]
-image:https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot-config-json-schema/maven.yml[Build Status,link=https://github.com/alexmond/spring-boot-actuator-extensions/actions]
+image:https://img.shields.io/github/actions/workflow/status/alexmond/spring-boot-actuator-extensions/maven.yml?branch=main[Build Status,link=https://github.com/alexmond/spring-boot-actuator-extensions/actions]
 image:https://img.shields.io/badge/Java-17%2B-blue.svg[Java 17+,link=https://openjdk.org/]
 image:https://codecov.io/gh/alexmond/spring-boot-actuator-extensions/graph/badge.svg?token=0JXWH3R9QI[Code Coverage,link=https://codecov.io/gh/alexmond/spring-boot-actuator-extensions]
 image:https://img.shields.io/badge/docs-alexmond.org-blue[Documentation,link=https://www.alexmond.org/extensions/current/]
