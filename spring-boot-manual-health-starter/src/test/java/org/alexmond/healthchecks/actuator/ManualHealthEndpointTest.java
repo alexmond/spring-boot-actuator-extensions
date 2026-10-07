@@ -17,36 +17,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ManualHealthEndpointTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @Test
-    void testManualHealthEndpoint() throws Exception {
-        // Initial status should be UP
-        mockMvc.perform(get("/actuator/health-manual"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("UP"));
+	@Test
+	void testManualHealthEndpoint() throws Exception {
+		// Initial status should be UP
+		mockMvc.perform(get("/actuator/health-manual"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("UP"));
 
-        // Set to OUT_OF_SERVICE
-        mockMvc.perform(post("/actuator/health-manual")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"status\":\"OUT_OF_SERVICE\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("OUT_OF_SERVICE"));
+		// Set to OUT_OF_SERVICE
+		mockMvc
+			.perform(post("/actuator/health-manual").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"status\":\"OUT_OF_SERVICE\"}"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("OUT_OF_SERVICE"));
 
-        mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isServiceUnavailable())
-                .andExpect(jsonPath("$.status").value("OUT_OF_SERVICE"));
+		mockMvc.perform(get("/actuator/health"))
+			.andExpect(status().isServiceUnavailable())
+			.andExpect(jsonPath("$.status").value("OUT_OF_SERVICE"));
 
-        // Set back to UP
-        mockMvc.perform(post("/actuator/health-manual")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"status\":\"UP\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("UP"));
+		// Set back to UP
+		mockMvc
+			.perform(post("/actuator/health-manual").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"status\":\"UP\"}"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("UP"));
 
-        mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("UP"));
-    }
+		mockMvc.perform(get("/actuator/health")).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("UP"));
+	}
+
 }

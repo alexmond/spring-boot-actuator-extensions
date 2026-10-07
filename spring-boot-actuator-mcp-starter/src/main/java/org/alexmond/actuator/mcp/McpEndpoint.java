@@ -12,8 +12,9 @@ import org.springframework.boot.actuate.endpoint.annotation.EndpointDiscoverer;
  */
 public class McpEndpoint extends AbstractDiscoveredEndpoint<McpOperation> {
 
-    McpEndpoint(EndpointDiscoverer<?, ?> discoverer, Object endpointBean, EndpointId id, Access defaultAccess,
-                Collection<McpOperation> operations) {
-        super(discoverer, endpointBean, id, defaultAccess, operations);
-    }
+	McpEndpoint(EndpointDiscoverer<?, ?> discoverer, Object endpointBean, EndpointId id, Access defaultAccess,
+			Collection<McpOperation> operations) {
+		super(discoverer, endpointBean, id, defaultAccess, operations);
+	}
+
 }
