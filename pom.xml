@@ -149,6 +149,15 @@
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
                             </path>
+                            <!-- Listing processor paths turns off classpath discovery, so every
+                                 processor must be named here. Without this one the starters ship
+                                 with no spring-configuration-metadata.json (no IDE completion for
+                                 their properties). Version comes from Spring Boot's dependency
+                                 management. -->
+                            <path>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-configuration-processor</artifactId>
+                            </path>
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
