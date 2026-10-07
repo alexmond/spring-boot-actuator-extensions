@@ -1,3 +1,8 @@
+- **3.5.16.3**
+* *Security:* under a Turkish or Azerbaijani default locale the sanitizer left keys containing an upper-case `I`, such as `MY.PRIVATE.VALUE`, unmasked in `/env` and `/configprops`. Key matching is now locale-independent. Upgrade if your JVM may run with such a default locale.
+* Fixed `health-manual` under the same locales: it no longer rejects `out_of_service` in lower or mixed case (the status was set to `UNKNOWN`).
+* Fixed a connection leak in the external HTTP and actuator health indicators. Each check built an HTTP client and never closed it, so its keep-alive connection stayed open until garbage collection. The client is now closed after every check. Reported health details are unchanged.
+* This is the final release of the 3.5 line: open-source support for Spring Boot 3.5 has ended. Please move to the 4.x lines of these starters.
 - **3.5.16.2**
 * The starters now ship `spring-configuration-metadata.json`, so IDEs complete and document their `management.*` properties. Earlier releases were built without it.
 * The build is now checked on JDK 17, 21 and 25.

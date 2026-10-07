@@ -10,6 +10,8 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
 
+import java.util.Locale;
+
 /**
  * Manual health endpoint for graceful shutdown and service state control.
  * Allows temporary suspension of service or termination before shutdown,
@@ -65,7 +67,7 @@ public class ManualHealthEndpoint implements HealthIndicator {
     @WriteOperation
     public Status setStatus(String status) {
         log.info("Manual health status change requested to: {}", status);
-        Status newStatus = switch (status.toUpperCase()) {
+        Status newStatus = switch (status.toUpperCase(Locale.ROOT)) {
             case "UP" -> Status.UP;
             case "OUT_OF_SERVICE" -> Status.OUT_OF_SERVICE;
             case "DOWN" -> Status.DOWN;
