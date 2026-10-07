@@ -25,10 +25,10 @@
         </jacoco.agent.arg>
 
         <spring-ai.version>2.0.1</spring-ai.version>
-        <mcp-sdk.version>2.0.0</mcp-sdk.version>
+        <mcp-sdk.version>2.0.1</mcp-sdk.version>
         <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <spring-javaformat.version>0.0.47</spring-javaformat.version>
+        <spring-javaformat.version>0.0.48</spring-javaformat.version>
         <checkstyle.version>9.3</checkstyle.version>
     </properties>
     <url>https://www.alexmond.org/extensions/current/index.html</url>
