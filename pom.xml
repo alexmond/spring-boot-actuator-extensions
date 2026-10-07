@@ -25,7 +25,7 @@
         </jacoco.agent.arg>
 
         <spring-ai.version>2.0.1</spring-ai.version>
-        <mcp-sdk.version>2.0.0</mcp-sdk.version>
+        <mcp-sdk.version>2.0.1</mcp-sdk.version>
     </properties>
     <url>https://www.alexmond.org/extensions/current/index.html</url>
     <description>Spring boot actuator extensions parent</description>
