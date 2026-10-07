@@ -61,7 +61,7 @@ public class ExternalActuatorHealthIndicatorEdgeCaseTest {
 	static class TestConfig {
 
 		@GetMapping("/malformed")
-		public String malformed() {
+		String malformed() {
 			return "This is not JSON { status: UP }";
 		}
 

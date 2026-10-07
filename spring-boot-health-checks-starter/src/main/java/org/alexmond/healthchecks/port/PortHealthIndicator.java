@@ -18,6 +18,7 @@ public class PortHealthIndicator extends CommonHealthIndicator {
 
 	private final HealthPortProperties properties;
 
+	@Override
 	protected Map<String, ? extends CommonSite> getSites() {
 		return properties.getSites();
 	}
@@ -27,6 +28,7 @@ public class PortHealthIndicator extends CommonHealthIndicator {
 	 * @param commonSite The site configuration containing host and port details
 	 * @return Health status of the connection attempt
 	 */
+	@Override
 	protected Health checkSite(CommonSite commonSite) {
 		PortSite site = (PortSite) commonSite;
 		if (site == null) {

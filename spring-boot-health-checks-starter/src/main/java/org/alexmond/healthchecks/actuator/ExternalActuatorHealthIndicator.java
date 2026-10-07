@@ -28,6 +28,7 @@ public class ExternalActuatorHealthIndicator extends CommonHealthIndicator {
 	 * Retrieves the configured sites for health checks.
 	 * @return Map of site names to their configurations
 	 */
+	@Override
 	protected Map<String, ? extends CommonSite> getSites() {
 		return properties.getSites();
 	}
@@ -37,6 +38,10 @@ public class ExternalActuatorHealthIndicator extends CommonHealthIndicator {
 	 * @param commonSite The site configuration to check
 	 * @return Health status of the actuator endpoint
 	 */
+	@Override
+	// The HTTP client is built per check and never closed. Closing it is a behaviour
+	// change; tracked as a follow-up.
+	@SuppressWarnings("PMD.CloseResource")
 	protected Health checkSite(CommonSite commonSite) {
 		ActuatorSite site = (ActuatorSite) commonSite;
 		if (site == null) {
@@ -60,7 +65,7 @@ public class ExternalActuatorHealthIndicator extends CommonHealthIndicator {
 		Health health;
 		try {
 			var response = restClient.get().uri(site.getUrl()).retrieve().body(Map.class);
-			String status = response != null && response.containsKey("status") ? response.get("status").toString()
+			String status = (response != null && response.containsKey("status")) ? response.get("status").toString()
 					: "UNKNOWN";
 			health = "UP".equalsIgnoreCase(status) ? Health.up().withDetail("url", site.getUrl()).build()
 					: Health.down().withDetail("url", site.getUrl()).withDetail("remoteStatus", status).build();

@@ -27,7 +27,7 @@ class ActuatorToolFactoryTest {
 	}
 
 	private static SyncToolSpecification tool(List<SyncToolSpecification> tools, String name) {
-		return tools.stream().filter(t -> t.tool().name().equals(name)).findFirst().orElseThrow();
+		return tools.stream().filter((t) -> t.tool().name().equals(name)).findFirst().orElseThrow();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -46,10 +46,10 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void namesToolsAndSortsThem() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha", "dash-id"), List.of()).getEndpoints());
-			assertThat(tools).extracting(t -> t.tool().name())
+			assertThat(tools).extracting((t) -> t.tool().name())
 				.containsExactly("actuator_alpha_read", "actuator_alpha_readOne", "actuator_alpha_reset",
 						"actuator_alpha_write", "actuator_dash-id");
 		});
@@ -59,22 +59,22 @@ class ActuatorToolFactoryTest {
 	void toolNamesDoNotChangeWhenAccessIsTightened() {
 		var pairRunner = new ApplicationContextRunner()
 			.withInitializer(
-					context -> context.getEnvironment().setConversionService(new ApplicationConversionService()))
+					(context) -> context.getEnvironment().setConversionService(new ApplicationConversionService()))
 			.withUserConfiguration(TestEndpoints.PairConfig.class);
-		pairRunner.run(context -> assertThat(
+		pairRunner.run((context) -> assertThat(
 				factory.createTools(TestEndpoints.discover(context, List.of("pair"), List.of()).getEndpoints()))
-			.extracting(t -> t.tool().name())
+			.extracting((t) -> t.tool().name())
 			.containsExactly("actuator_pair_get", "actuator_pair_set"));
 		pairRunner.withPropertyValues("management.endpoint.pair.access=read-only")
-			.run(context -> assertThat(
+			.run((context) -> assertThat(
 					factory.createTools(TestEndpoints.discover(context, List.of("pair"), List.of()).getEndpoints()))
-				.extracting(t -> t.tool().name())
+				.extracting((t) -> t.tool().name())
 				.containsExactly("actuator_pair_get"));
 	}
 
 	@Test
 	void buildsInputSchemaFromParameters() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha", "dash-id"), List.of()).getEndpoints());
 			// MCP SDK 2.0 stores the input schema on the Tool as a plain JSON map
@@ -92,7 +92,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void generatesDescriptionWhenNoneIsKnown() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
 			assertThat(tool(tools, "actuator_alpha_write").tool().description()).contains("'alpha'")
@@ -103,7 +103,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void invokesReadOperationAsJson() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_alpha_read"), Map.of());
@@ -114,7 +114,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void writeOperationChangesState() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
 			assertThat(call(tool(tools, "actuator_alpha_write"), Map.of("level", "DEBUG")).isError()).isFalse();
@@ -124,7 +124,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void convertsArgumentTypes() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("dash-id"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_dash-id"), Map.of("limit", 7, "verbose", true));
@@ -134,7 +134,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void missingRequiredArgumentIsAnErrorNamingIt() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_alpha_readOne"), Map.of());
@@ -145,7 +145,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void nullArgumentsMapIsTreatedAsEmpty() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory
 				.createTools(TestEndpoints.discover(context, List.of("alpha"), List.of()).getEndpoints());
 			assertThat(call(tool(tools, "actuator_alpha_read"), null).isError()).isFalse();
@@ -154,7 +154,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void operationExceptionIsAnErrorWithoutStackTrace() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory.createTools(TestEndpoints.discover(context, List.of("boom"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_boom_fail"), Map.of());
 			assertThat(result.isError()).isTrue();
@@ -164,7 +164,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void unserialisableResultIsAnError() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory.createTools(TestEndpoints.discover(context, List.of("boom"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_boom_empty"), Map.of());
 			assertThat(result.isError()).isTrue();
@@ -174,7 +174,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void nullResultIsEmptyText() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory.createTools(TestEndpoints.discover(context, List.of("boom"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_boom_nothing"), Map.of("key", "k"));
 			assertThat(result.isError()).isFalse();
@@ -184,7 +184,7 @@ class ActuatorToolFactoryTest {
 
 	@Test
 	void longResultIsTruncated() {
-		runner.run(context -> {
+		runner.run((context) -> {
 			var tools = factory.createTools(TestEndpoints.discover(context, List.of("boom"), List.of()).getEndpoints());
 			CallToolResult result = call(tool(tools, "actuator_boom_big"), Map.of("size", 200, "fill", "x"));
 			assertThat(text(result)).startsWith("x".repeat(50) + "\n").contains("truncated");

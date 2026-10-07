@@ -28,7 +28,7 @@ class AllExternalUpTest {
 
 	@Test
 	@DirtiesContext
-	public void UPHealthCheckTest() throws JacksonException {
+	void UPHealthCheckTest() throws JacksonException {
 		StringBuffer content = new StringBuffer();
 		// Thread.sleep(300000);
 		RestTemplate restTemplate = new RestTemplate();

@@ -23,7 +23,7 @@ public class ActuatorMcpManagementContextConfiguration {
 	RouterFunction<ServerResponse> actuatorMcpRouterFunction(ObjectProvider<ActuatorMcpServer> server) {
 		ActuatorMcpServer mcpServer = server.getIfAvailable();
 		if (mcpServer == null) {
-			return RouterFunctions.route(request -> false, request -> ServerResponse.notFound().build());
+			return RouterFunctions.route((request) -> false, (request) -> ServerResponse.notFound().build());
 		}
 		return mcpServer.getRouterFunction();
 	}
@@ -72,7 +72,7 @@ public class ActuatorMcpManagementContextConfiguration {
 		public int getPhase() {
 			// Above WebServerGracefulShutdownLifecycle (DEFAULT_PHASE - 1024): stopped
 			// before it
-			return SmartLifecycle.DEFAULT_PHASE - 512;
+			return DEFAULT_PHASE - 512;
 		}
 
 	}

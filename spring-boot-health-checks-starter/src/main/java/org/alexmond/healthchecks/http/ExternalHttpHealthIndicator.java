@@ -27,6 +27,7 @@ public class ExternalHttpHealthIndicator extends CommonHealthIndicator {
 
 	private final HealthHttpProperties properties;
 
+	@Override
 	protected Map<String, ? extends CommonSite> getSites() {
 		return properties.getSites();
 	}
@@ -38,6 +39,10 @@ public class ExternalHttpHealthIndicator extends CommonHealthIndicator {
 	 * status
 	 * @return Health status of the site, including details about the check
 	 */
+	@Override
+	// The HTTP client is built per check and never closed. Closing it is a behaviour
+	// change; tracked as a follow-up.
+	@SuppressWarnings("PMD.CloseResource")
 	protected Health checkSite(CommonSite commonSite) {
 		HttpSite site = (HttpSite) commonSite;
 		if (site == null) {

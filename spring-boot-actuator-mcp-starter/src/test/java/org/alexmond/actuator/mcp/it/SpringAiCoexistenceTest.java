@@ -35,7 +35,8 @@ class SpringAiCoexistenceTest {
 		try (McpTestClient app = new McpTestClient(serverPort, "/mcp");
 				McpTestClient actuator = new McpTestClient(managementPort, "/actuator/mcp")) {
 			assertThat(app.toolNames()).containsExactly("app_echo");
-			assertThat(actuator.toolNames()).allMatch(name -> name.startsWith("actuator_")).doesNotContain("app_echo");
+			assertThat(actuator.toolNames()).allMatch((name) -> name.startsWith("actuator_"))
+				.doesNotContain("app_echo");
 		}
 	}
 
