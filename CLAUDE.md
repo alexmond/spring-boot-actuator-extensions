@@ -24,30 +24,29 @@ annotations stay under `com.fasterxml.jackson.annotation`). The MockMvc test sli
 
 ## Build & Test Commands
 
-There is **no Maven wrapper** — use a locally installed `mvn`. (Several sibling `org.alexmond` repos ship
-`./mvnw`; this one does not — don't reach for it here.)
+Use the Maven wrapper (`./mvnw`). It pins the Maven version; CI and the release workflow use it too.
 
 ```bash
 # Build + test everything including the sample app (exact CI command; CI runs it on JDK 17, 21 and 25)
-mvn -B verify --file pom.xml -Pdefault --no-transfer-progress
+./mvnw -B verify --file pom.xml -Pdefault --no-transfer-progress
 
 # Same thing, short form
-mvn -B verify -Pdefault
+./mvnw -B verify -Pdefault
 
 # Build/test only the published starters (no sample app — the default modules list)
-mvn package
+./mvnw package
 
 # Run all tests
-mvn test
+./mvnw test
 
 # Single test class
-mvn test -pl spring-boot-health-checks-starter -Dtest=ExternalHttpHealthIndicatorEdgeCaseTest
+./mvnw test -pl spring-boot-health-checks-starter -Dtest=ExternalHttpHealthIndicatorEdgeCaseTest
 
 # Single test method
-mvn test -pl spring-boot-health-checks-starter -Dtest=ExternalHttpHealthIndicatorEdgeCaseTest#methodName
+./mvnw test -pl spring-boot-health-checks-starter -Dtest=ExternalHttpHealthIndicatorEdgeCaseTest#methodName
 
 # Run the sample app (profiles srv1/srv2 shift the port to 8081/8082)
-mvn spring-boot:run -pl spring-boot-test-app
+./mvnw spring-boot:run -pl spring-boot-test-app
 ```
 
 Note the module layout in `pom.xml`: the three starters are always-on `<modules>`, while
@@ -56,13 +55,13 @@ Note the module layout in `pom.xml`: the three starters are always-on `<modules>
 ### Coverage gate
 
 JaCoCo enforces a **minimum 80% line coverage per module** (`BUNDLE` rule in the parent `pom.xml`).
-The `check` goal runs at `verify`, so `mvn package` skips the gate.
+The `check` goal runs at `verify`, so `./mvnw package` skips the gate.
 A build can fail at the `check` goal on coverage even when all tests pass — add tests, don't lower the bar
 without reason. Coverage reports land in each module's `target/site/jacoco/`.
 
 ### Releasing
 
-`mvn deploy -Prelease` activates GPG signing + the Sonatype `central-publishing-maven-plugin` (auto-publish).
+`./mvnw deploy -Prelease` activates GPG signing + the Sonatype `central-publishing-maven-plugin` (auto-publish).
 Releases are normally driven by `.github/workflows/maven_release.yml`, not run by hand.
 
 ## Architecture
@@ -131,16 +130,15 @@ Two patterns, both worth knowing before adding tests:
 ## House conventions vs. sibling repos
 
 This repo is one of several near-identical `org.alexmond` Spring Boot starter libraries. The starter pattern,
-the 80% JaCoCo gate, and the `default`-profile sample-app split are shared across them — but do **not**
-assume the rest match. Unlike siblings such as `spring-boot-config-json-schema` and `notify4j`, this repo has
-**no `./mvnw` wrapper**.
+the 80% JaCoCo gate, the `default`-profile sample-app split, and the Maven wrapper are shared across them — but
+do **not** assume the rest match.
 
 ### Code style and quality gates
 
 The repo uses the shared formatter and linters, on every module including the sample app:
 
 - **spring-javaformat** (`validate` phase) — Spring code style, **tabs** for indentation. It fails the build
-  on unformatted code. Run `mvn -Pdefault spring-javaformat:apply` before committing.
+  on unformatted code. Run `./mvnw -Pdefault spring-javaformat:apply` before committing.
 - **Checkstyle** (`validate` phase) — `checkstyle.xml` (Spring checks) with `checkstyle-suppressions.xml`.
   Covers main and test sources.
 - **PMD** (`process-classes` phase, so type-resolution rules see compiled classes) — `pmd-ruleset.xml`.
