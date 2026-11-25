@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.endpoint.SanitizableData;
 import org.springframework.boot.actuate.endpoint.SanitizingFunction;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -15,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = { McpTestApplication.class, SeparateManagementPortTest.MaskSecret.class },
-		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.server.port=0",
 				"management.endpoints.mcp.exposure.include=health,metrics,loggers,env",
 				"management.endpoint.env.show-values=always", "app.secret=hunter2", "app.visible=hello" })

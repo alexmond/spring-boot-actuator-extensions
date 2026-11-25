@@ -4,12 +4,13 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = McpTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+@SpringBootTest(classes = McpTestApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.endpoints.mcp.exposure.include=health",
 				"management.endpoint.health.access=read-only" })
 @DirtiesContext
