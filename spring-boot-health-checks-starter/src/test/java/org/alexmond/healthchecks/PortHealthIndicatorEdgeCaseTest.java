@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.TestPropertySource;
@@ -17,8 +18,7 @@ import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-		classes = PortHealthIndicatorEdgeCaseTest.TestConfig.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = PortHealthIndicatorEdgeCaseTest.TestConfig.class)
 @TestPropertySource(properties = { "management.health.port.sites.invalid-dns.host=non-existent-host-name-alexmond.org",
 		"management.health.port.sites.invalid-dns.port=80", "management.health.port.sites.invalid-dns.timeout=1s",
 		"management.health.port.sites.invalid-dns.interval=0s", "management.endpoint.health.show-details=always" })
