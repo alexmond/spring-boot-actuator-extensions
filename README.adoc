@@ -40,7 +40,7 @@ For full documentation, please visit our link:https://www.alexmond.org/extension
 == Requirements
 
 * Java 17+
-* Spring Boot 4.0.8
+* Spring Boot 4.0.10
 * Maven
 
 == Changelog

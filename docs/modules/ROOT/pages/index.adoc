@@ -43,7 +43,7 @@ Use this module as a reference for implementing the extensions in your own appli
 == Requirements
 
 * Java 17 or higher
-* Spring Boot 4.0.8 (the `3.5` branch tracks Spring Boot 3.5.x)
+* Spring Boot 4.0.10 (the `3.5` branch tracks Spring Boot 3.5.x)
 * Maven build tool
 
 == Changelog
