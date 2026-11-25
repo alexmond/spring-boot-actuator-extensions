@@ -36,6 +36,7 @@ public class ActuatorMcpServer implements DisposableBean {
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/**
+	 * Creates the MCP server for actuator endpoints.
 	 * @param allowedOrigins browser origins accepted in an Origin header; requests
 	 * without one are always accepted, any other origin gets 403 (DNS-rebinding
 	 * protection required by the MCP spec)

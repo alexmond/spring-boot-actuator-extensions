@@ -4,6 +4,7 @@ import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * tools).
  */
 @SpringBootTest(classes = { McpTestApplication.class, SpringAiCoexistenceTest.AppTool.class },
-		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.server.port=0", "management.endpoints.mcp.exposure.include=health",
 				"spring.ai.mcp.server.protocol=STREAMABLE" })
 @DirtiesContext
