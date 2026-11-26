@@ -6,11 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A multi-module Maven project publishing Spring Boot Actuator extension starters to Maven Central
 (groupId `org.alexmond`). Each starter is an auto-configured library; the repo also ships a non-published
-sample app for manual verification. Java 17. **This branch (`main`) is the Spring Boot 4.1 line** — the
+sample app for manual verification. Java 17. **This branch (`main`) is the Spring Boot 4.2 line** — the
 `spring-boot-starter-parent` version in the root `pom.xml` is the source of truth.
 
 - **`main` is always the newest Spring Boot line.** Older lines live on `<major>.<minor>` branches:
-  `4.0` (Spring Boot 4.0.x, maintained) and `3.5` (Spring Boot 3.5.x, end-of-life).
+  `4.1` (Spring Boot 4.1.x, maintained), `4.0` (Spring Boot 4.0.x, maintained) and `3.5` (Spring Boot 3.5.x, end-of-life).
 - When `main` moves to a new Boot **minor**, cut the outgoing line to its own `<major>.<minor>`
   branch **first**, from the pre-bump head. Every Boot minor gets a branch, not only a new major.
 - A fix that applies to every line goes to each branch, one PR each.
