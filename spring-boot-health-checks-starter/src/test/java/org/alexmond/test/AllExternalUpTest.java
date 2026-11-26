@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,9 +46,11 @@ class AllExternalUpTest {
 	void UPHealthCheckTest() throws JacksonException {
 		StringBuffer content = new StringBuffer();
 		// Thread.sleep(300000);
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9082/actuator/health",
-				String.class);
+		ResponseEntity<String> response = RestClient.create()
+			.get()
+			.uri("http://localhost:9082/actuator/health")
+			.retrieve()
+			.toEntity(String.class);
 		content.append(response.getBody());
 		log.info("actuator content {}", content);
 		JsonNode jsonNode = objectMapper.readTree(content.toString());
